@@ -1,2 +1,3 @@
-python manage.py runserver_socketio host:port
-sudo python manage.py runserver_socketio 192.168.3.14:1235
+
+Para correr el servidor en el local:
+sudo python manage.py runserver_socketio localhost:3000
