@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Navegacion 4x4{% endblock %}
+
+
+{% block extra_js %}
+	{% load socketio_tags %}
+	{% socketio %}
+
+{% endblock %}
+
+
+{% block main %}
+<ul>
+	<li><a href="/mando">Mando del Coche</a></li>
+	<li><a href="/log">Log del coche</a></li>
+	<li><a href="/navigation">Auto-Navegacion</a></li>
+</ul>
+{% endblock %}

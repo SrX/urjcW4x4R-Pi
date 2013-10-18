@@ -1,0 +1,2 @@
+python manage.py runserver_socketio host:port
+sudo python manage.py runserver_socketio 192.168.3.14:1235
