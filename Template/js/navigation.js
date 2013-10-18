@@ -10,20 +10,21 @@ $(function () {
         zoom: { interactive: true },
         xaxis: {
 				//zoomRange: [0.1, 10],
-				//panRange: [-10, 10]
+				//panRange: [-3.815, 10]
 			},
 			yaxis: {
 				//zoomRange: [0.1, 10],
-				//panRange: [-10, 10]
+				//panRange: [-3.8, -3.82]
 			},
 			pan: {
 				interactive: true
 			}
     };
     var data = [];
-    var placeholder = $("#placeholder");
+    var navi_map = $("#navi_map");
     
-    $.plot(placeholder, data, options);
+    $.plot(navi_map, data, options);
+    $.plot(turn_angle, data, options);
 
     
     // fetch one series, adding to what we got
@@ -45,7 +46,7 @@ $(function () {
     				}
     			}
     		}
-            $.plot(placeholder, data, options);
+            $.plot(navi_map, data, options);
             console.log("puntos pintados");
          }
   
@@ -87,11 +88,12 @@ $(function () {
 
     };
 
+        addArrows();
     start();
 
 
 		$("<div class='button' style='right:20px;top:20px'>zoom out</div>")
-			.appendTo(placeholder)
+			.appendTo(navi_map)
 			.click(function (event) {
 				event.preventDefault();
 				plot.zoomOut();
@@ -104,16 +106,18 @@ $(function () {
 
 		function addArrow(dir, right, top, offset) {
 			$("<img class='button' src='arrow-" + dir + ".gif' style='right:" + right + "px;top:" + top + "px'>")
-				.appendTo(placeholder)
+				.appendTo(navi_map)
 				.click(function (e) {
 					e.preventDefault();
 					plot.pan(offset);
 				});
 		}
+        function addArrows(){
         addArrow("left", 55, 60, { left: -100 });
 		addArrow("right", 25, 60, { left: 100 });
 		addArrow("up", 40, 45, { top: -100 });
 		addArrow("down", 40, 75, { top: 100 });
+        }
 
 });
 
