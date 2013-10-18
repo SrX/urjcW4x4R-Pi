@@ -5,7 +5,8 @@ from navigation.models import Route, Coord;
 
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
-trakeado = False;
+
+inc = 3;
 
 def to_bdd():
     point = Point('trackcompleto.xml','tr.xml')
@@ -25,73 +26,41 @@ def to_bdd():
 def navigation(request, socket, context, message):
     print "hola"
     route = {};
-    #to_bdd();
 
     rout = Route.objects.get(id=4);
-    #rr= Route.objects.all();
-    #for r in rr:
-    #    print r
-    #print rout.id
     coords = Route.get_only_coord(rout);
 
     if message.has_key('action'):
         print "get_route"
-        #coords =  [[72,52],[43,34],[23,45],[1,2],[99,97]]
         route = {'action':'route','series': {"label": "Route0", "data":coords}}
     socket.send(route)
 
 
 
-@events.on_message(channel="manual_control")
+@events.on_message(channel="hand_control")
 def message(request, socket, context, message):
 
     print "manual_control"
-    new_param={}
-    if 'type' in message  and  message['type']=='manual_control':
-        if message["actionx"] == "w":
-            var.ws_value=var.ws_value+5
-            if var.ws_value>120:
-                var.ws_value=120
-            #var.car.speed(var.ws_value)
-            new_param = {"action": "message", "actionx": "w", "value": var.ws_value }
 
-        elif message["actionx"] == "s":
-            var.ws_value=var.ws_value-5
-            if var.ws_value<60:
-                var.ws_value=60
-            #var.car.speed(var.ws_value)
-            new_param = {"action": "message", "actionx": "s", "value": var.ws_value}
+    try:
+        if message['action']=='w':
+            var.ws_value+=inc
+        elif message['action'] == 's':
+            var.ws_value-=inc
+        elif message['action'] == 'd':
+            var.ad_value-=inc
+        elif message['action'] == 'a':
+            var.ad_value+=inc
+        elif message['action'] == 'q':
+            pass
+        to_brodcast = {'action':'coord_inLine','series': {"label": "inLine", "data":[[var.ad_value, var.ws_value]]}}
+        to_channel = {'action':'update','ws': var.ws_value,'ad':var.ad_value};
 
-        elif message["actionx"] == "a":
-            var.ad_value=var.ad_value-5
-            if var.ad_value<60:
-                var.ad_value=60
-            #var.car.turn(var.ad_value)
-            new_param = {"action": "message", "actionx": "a", "value": var.ad_value}
-
-        elif message["actionx"] == "d":
-            var.ad_value=var.ad_value+5
-            if var.ad_value>120:
-                var.ad_value=120
-            #var.car.turn(var.ad_value)
-            new_param = {"action": "message", "actionx": "d", "value": var.ad_value}
-
-        elif message["actionx"] == "stop":
-            new_param = {"action": "message", "actionx": "stop", "value": 90}
-            var.ad_value=90
-            var.ws_value=90
-            #var.car.turn(var.ad_value)
-            #var.car.speed(var.ws_value)
-        else:
-            print "its ok"
-    else:
-        print "no actionx"
-    print str(var.ws_value) + " " + str(var.ad_value)
-    socket.broadcast_channel({"action": "message", "message":"manual_control"}, 'logger')
-    socket.broadcast_channel({"action": "route", "message":"navigation",
-                            "x":var.ws_value,"y":var.ad_value,
-                            'series': {"label": "inLine", "data":[[var.ad_value, var.ws_value]]}}, 'navigation')
-    socket.send_and_broadcast_channel(new_param)
+        #socket.broadcast_channel({"action": "message", "message":"manual_control"}, 'logger')
+        socket.broadcast_channel(to_brodcast, 'navigation')
+        socket.send_and_broadcast_channel(to_channel)
+    except:
+        pass
 
 class Point:
     "Optimizar la parte de abrir y cerrar el fichero"

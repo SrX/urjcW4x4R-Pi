@@ -17,13 +17,7 @@ $(function () {
         // then fetch the data with jQuery
         function onDataReceived(series) {
             console.log("onDataReceived");
-            // extract the first coordinate pair so you can see that
-            // data is now an ordinary Javascript object
-           // var firstcoordinate = '(' + series.data[0][0] + ', ' + series.data[0][1] + ')';
 
-            
-            // let's add it to our current data
-    		// let's add it to our current data
     		if (!alreadyFetched[series.label]) {
     			alreadyFetched[series.label] = true;
     			data.push(series);
@@ -48,6 +42,8 @@ $(function () {
         console.log(data);
         switch(data.action){
             case 'route':
+            	onDataReceived(data.series);
+            case 'coord_inLine':
             	onDataReceived(data.series);
             break;
         }

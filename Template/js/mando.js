@@ -3,20 +3,20 @@ $(document).ready(function () {
 var socket;
 
     $("#w").click(function () {
-        socket.send({type: 'manual_control',action:"messaged", actionx: 'w'});
         console.log("send w");
+        socket.send({action: 'w'});
     });
     $("#s").click(function () {
-        socket.send({type: 'manual_control',action:"messaged", actionx: 's'});
+        socket.send({action: 's'});
     });
     $("#a").click(function () {
-        socket.send({type: 'manual_control',action:"messaged", actionx: 'a'});
+        socket.send({action: 'a'});
     });
     $("#d").click(function () {
-        socket.send({type: 'manual_control',action:"messaged", actionx: 'd'});
+        socket.send({action: 'd'});
     });
     $("#stop").click(function () {
-       socket.send({type: 'manual_control',action:"messaged", actionx: 'stop'});
+        socket.send({action: 'q'});
     });
 
 
@@ -24,39 +24,18 @@ var socket;
 
     var messaged = function(data) {
         console.log("messaged_data");
-        switch(data.actionx){
-            case 'w':
-            case 's':
-            $("#velocidad").html(data.value)
+        switch(data.action){
+            case 'update':
+                $("#velocidad").html(data.ws) 
+                $("#giro").html(data.ad)
             break;
-            
-            case 'a':
-            case 'd':
-            $("#giro").html(data.value)
-            break;
-        }
-
-
-        switch (data.action) {
-            case 'in-use':
-                alert('Name is in use, please choose another');
-                break;
-            case 'started':
-                started = true;
-                break;
-            case 'message':
-                break;  
-            case 'system':
-                data['name'] = 'SYSTEM';
-                
-                break;
         }
     };
 
 
     var connected = function() {
         console.log("connected");
-        socket.subscribe('manual_control');
+        socket.subscribe('hand_control');
 
         socket.send({hola:"hola hola->"});
     };
