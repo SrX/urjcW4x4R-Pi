@@ -36,6 +36,7 @@ $(function () {
     			}
     		}
             $.plot(placeholder, data, options);
+            console.log("puntos pintados");
          }
   
 
@@ -46,7 +47,7 @@ $(function () {
         console.log("messaged_data_navigation");
         console.log(data);
         switch(data.action){
-            case 'coord':
+            case 'route':
             	onDataReceived(data.series);
             break;
         }
@@ -56,7 +57,8 @@ $(function () {
         console.log("connected");
         socket.subscribe('navigation');
 
-        socket.send({hola:"hola hola->"});
+        //socket.send({hola:"hola hola->"});
+        socket.send({action:'get_route', 'route_id': 0});
     };
 
     var disconnected = function() {
