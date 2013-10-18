@@ -52,7 +52,9 @@ def message(request, socket, context, message):
         elif message['action'] == 'a':
             var.ad_value+=inc
         elif message['action'] == 'q':
-            pass
+            var.ad_value = 90;
+            var.ws_value = 90;
+
         to_brodcast = {'action':'coord_inLine','series': {"label": "inLine", "data":[[var.ad_value, var.ws_value]]}}
         to_channel = {'action':'update','ws': var.ws_value,'ad':var.ad_value};
 
