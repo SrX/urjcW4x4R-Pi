@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='utf-8'?>
+<data>
+	<coordenada>
+		<date>220313</date>
+		<course>10.33</course>
+		<latlong>4016.9951,N,00349.1793,W</latlong>
+		<speed>0.00</speed>
+		<utc>1</utc>
+	</coordenada>
+	<coordenada>
+		<date>11113</date>
+		<course>10.33</course>
+		<latlong>1111.9951,N,00349.1793,W</latlong>
+		<speed>0.00</speed>
+		<utc>2</utc>
+	</coordenada>
+	<coordenada>
+		<date>22222</date>
+		<course>10.33</course>
+		<latlong>2222.9951,N,00349.1793,W</latlong>
+		<speed>slow</speed>
+		<utc>3</utc>
+	</coordenada>
+	<coordenada>
+		<date>220313</date>
+		<course>s</course>
+		<latlong>3333.9951,N,00349.1793,W</latlong>
+		<speed>too fast!</speed>
+		<utc>4</utc>
+	</coordenada>
+</data>
