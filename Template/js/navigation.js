@@ -1,8 +1,24 @@
 $(function () {
+    // add zoom out button 
+
+
+
     var options = {
         lines: { show: true },
         points: { show: false },
-        xaxis: { tickDecimals: 0, tickSize: 1 }
+        xaxis: { tickDecimals: 0, tickSize: 1 },
+        zoom: { interactive: true },
+        xaxis: {
+				//zoomRange: [0.1, 10],
+				//panRange: [-10, 10]
+			},
+			yaxis: {
+				//zoomRange: [0.1, 10],
+				//panRange: [-10, 10]
+			},
+			pan: {
+				interactive: true
+			}
     };
     var data = [];
     var placeholder = $("#placeholder");
@@ -72,5 +88,32 @@ $(function () {
     };
 
     start();
+
+
+		$("<div class='button' style='right:20px;top:20px'>zoom out</div>")
+			.appendTo(placeholder)
+			.click(function (event) {
+				event.preventDefault();
+				plot.zoomOut();
+			});
+
+		// and add panning buttons
+
+		// little helper for taking the repetitive work out of placing
+		// panning arrows
+
+		function addArrow(dir, right, top, offset) {
+			$("<img class='button' src='arrow-" + dir + ".gif' style='right:" + right + "px;top:" + top + "px'>")
+				.appendTo(placeholder)
+				.click(function (e) {
+					e.preventDefault();
+					plot.pan(offset);
+				});
+		}
+        addArrow("left", 55, 60, { left: -100 });
+		addArrow("right", 25, 60, { left: 100 });
+		addArrow("up", 40, 45, { top: -100 });
+		addArrow("down", 40, 75, { top: 100 });
+
 });
 
