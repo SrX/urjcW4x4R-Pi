@@ -1,7 +1,7 @@
 $(function () {
     var options = {
         lines: { show: true },
-        points: { show: true },
+        points: { show: false },
         xaxis: { tickDecimals: 0, tickSize: 1 }
     };
     var data = [];

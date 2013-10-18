@@ -12,11 +12,12 @@ def to_bdd():
     pp = point.get();
     print pp
     rout = Route.objects.create(name="TrackCompleto");
-
     pp == -1
-    while pp != 0:
+    k=0;
+    while pp != 0 or k>5:
         pp = point.get();
         print pp
+        k+=1;
         cor = Coord.objects.create(route=rout,lat=float(pp[0]),lon=float(pp[1]),speed=float(pp[2]),track=float(pp[3]),time=pp[4]);
         #return [lat, lon,speed,time,track]
 
@@ -25,9 +26,17 @@ def navigation(request, socket, context, message):
     print "hola"
     route = {};
     #to_bdd();
+
+    rout = Route.objects.get(id=4);
+    #rr= Route.objects.all();
+    #for r in rr:
+    #    print r
+    #print rout.id
+    coords = Route.get_only_coord(rout);
+
     if message.has_key('action'):
         print "get_route"
-        coords =  [[72,52],[43,34],[23,45],[1,2],[99,97]]
+        #coords =  [[72,52],[43,34],[23,45],[1,2],[99,97]]
         route = {'action':'route','series': {"label": "Route0", "data":coords}}
     socket.send(route)
 

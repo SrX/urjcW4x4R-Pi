@@ -3,9 +3,15 @@ from django.db import models
 class Route(models.Model):
     name = models.CharField(max_length=80)
 
-    def get_only_coord(self, route_id):
+    def get_only_coord(route_id):
         obj = Coord.objects.filter(route=route_id);
-        return obj
+        #print obj
+        coords = [];
+        for o in obj:
+            #print "--A"
+            #print o.lat +' '+ o.lon
+            coords.append([o.lat, o.lon])
+        return  coords
 
 
 class Coord(models.Model):
