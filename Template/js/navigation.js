@@ -24,7 +24,6 @@ $(function () {
     var navi_map = $("#navi_map");
     
     $.plot(navi_map, data, options);
-    $.plot(turn_angle, data, options);
 
     
     // fetch one series, adding to what we got
