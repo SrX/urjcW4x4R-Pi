@@ -1,22 +1,7 @@
 import gps
 import sys
-
-# try:
-# 	_gps = gps.gps(mode=gps.WATCH_ENABLE|gps.WATCH_JSON|gps.WATCH_NEWSTYLE)
-# except: #except (StopIteration):
-#     print "Unexpected error:", sys.exc_info()[0]
-#     _gps = {}
-#     pass
-
-
-# def resetGps():
-#     try:
-#         return gps.gps(mode=gps.WATCH_ENABLE|gps.WATCH_NEWSTYLE)
-#     except: #except (StopIteration):
-#         print "Unexpected error:", sys.exc_info()[0]
-#         return {}
-#         pass
-
+import serial
+import time
 
 # try:
 #     _gps.next()
@@ -60,13 +45,6 @@ class StartGps(object):
                         #'alt'  :   self._gps.fix.altitude,
                         }
 
-
-
-
-
-
-import serial, time
-
 class Control(object):
 
     # arreglar el fallo del log
@@ -97,6 +75,7 @@ class Control(object):
             self.arduino_conect.write(chr(grados))
 
 
+<<<<<<< HEAD
 try:
     vehicle = Control();
 except: 
@@ -111,3 +90,7 @@ _gps = StartGps()
 
 
 
+=======
+vehicle = Control();
+_gps = StartGps();
+>>>>>>> 8a96186b7e92e606a42eb32eeef9de03cbfbcf1d
