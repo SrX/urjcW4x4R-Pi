@@ -20,24 +20,39 @@ except: #except (StopIteration):
 
 import serial, time
 
-class Control:
+class Control(object):
 
     # arreglar el fallo del log
     def __init__ (self):
-        self.arduino_conect = serial.Serial('/dev/ttyUSB0', 9600, timeout=1)
+        try:
+            self.arduino_conect = serial.Serial('/dev/ttyUSB0', 9600, timeout=1)
+        except: #except (StopIteration):
+            print "Unexpected error:", sys.exc_info()[0]
+            self.arduino_conect = ''
+            pass
+    
         self.speed(90)
         self.turn(90)
 
     def speed(self, velocidad):
-        self.arduino_conect.write(chr(255))
-        self.arduino_conect.write(chr(2))
-        self.arduino_conect.write(chr(velocidad))
+        print 'vehicle: v ' + str(velocidad)
+        if self.arduino_conect != '':
+            self.arduino_conect.write(chr(255))
+            self.arduino_conect.write(chr(2))
+            self.arduino_conect.write(chr(velocidad))
 
 
     def turn(self, grados):
-        self.arduino_conect.write(chr(255)) 
-        self.arduino_conect.write(chr(1))
-        self.arduino_conect.write(chr(grados))
+        print 'vehicle: g ' + str(grados)
+        if self.arduino_conect != '':
+            self.arduino_conect.write(chr(255)) 
+            self.arduino_conect.write(chr(1))
+            self.arduino_conect.write(chr(grados))
 
+
+try:
+    vehicle = Control();
+except: 
+    print "Unexpected error:", sys.exc_info()[0]
+    pass
 #no quiere sin /dev/ttyUSB0
-#vehicle = Control();

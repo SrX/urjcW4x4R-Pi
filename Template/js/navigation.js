@@ -121,7 +121,7 @@ $(function() {
         socket.send({
             action: 'get_gps_data'
         });
-        setTimeout(get_gps_data, 1500);
+        setTimeout(get_gps_data, 300);
     }
 
     var disconnected = function() {
