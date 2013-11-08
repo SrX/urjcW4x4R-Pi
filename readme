@@ -1,3 +1,8 @@
 
 Para correr el servidor en el local:
-sudo python manage.py runserver_socketio localhost:3000
+
+
+
+
+1.Arrancar gpsd o gpsfake antes del servidor django
+2.sudo python manage.py runserver_socketio localhost:3000
