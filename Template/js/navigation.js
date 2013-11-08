@@ -75,6 +75,13 @@ $(function() {
     plotAccordingToChoices();
 
 
+    $( "#do_route" ).click(function() {
+        console.log('do_route');
+      socket.send({
+            action: 'do_route',
+            'route_id': 4
+        });
+    });
 
     var messaged = function(data) {
         console.log("messaged_data_navigation");
@@ -90,7 +97,6 @@ $(function() {
 
             case 'gpsInfo':
                 console.log(data.gpsData);
-                console.log(data.bla);
                 if (data.gpsData != '') {
                     var series = {
                         label: 'GPS',
