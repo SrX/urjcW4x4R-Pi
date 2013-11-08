@@ -31,12 +31,25 @@ inc = 3;
 #         cor = Coord.objects.create(route=rout,lat=float(pp[0]),lon=float(pp[1]),speed=float(pp[2]),track=float(pp[3]),time=pp[4]);
 #         #return [lat, lon,speed,time,track]
 
+def do_route(rid):
+    print 'do_route'
+    rout = Route.objects.get(id=4);
+    coords = Route.get_only_coord(rout);
+
+    for point in coords:
+        gpsPoint = 12
+    #print coords
+    pass
+
 @events.on_message(channel="navigation")
 def navigation(request, socket, context, message):
     print 'chan chan chan'
     try:
-        if message['action'] == 'get_route':
-            print "get_route"
+        if message['action'] == 'do_route':
+            do_route(message['route_id']);
+
+        elif message['action'] == 'get_route':
+            #print "get_route"
             route = {};
             rout = Route.objects.get(id=4);
             coords = Route.get_only_coord(rout);
@@ -45,20 +58,21 @@ def navigation(request, socket, context, message):
 
         elif message['action'] == 'get_gps_data':
             try:
-                #print _gps
+                # #print _gps
 
-                try:
-                    _gps.next()
-                except: 
-                    print "Unexpected error: _gps.next() ", sys.exc_info()[0]
+                # try:
+                #     _gps.next()
+                # except: 
+                #     print "Unexpected error: _gps.next() ", sys.exc_info()[0]
                 
 
-                gpsData =  {'lat'   :   _gps.fix.latitude,
-                            'lon'   :   _gps.fix.longitude,
-                            'track' :   _gps.fix.track,
-                            'speed' :   _gps.fix.speed,
-                            'time'  :   _gps.fix.time }
-                print gpsData
+                # gpsData =  {'lat'   :   _gps.fix.latitude,
+                #             'lon'   :   _gps.fix.longitude,
+                #             'track' :   _gps.fix.track,
+                #             'speed' :   _gps.fix.speed,
+                #             'time'  :   _gps.fix.time }
+                # #print gpsData
+                gpsData = _gps.update()
                 gpsInfo = {'action':'gpsInfo','gpsData': gpsData}
             except:
                 print "Unexpected error ->:", sys.exc_info()[0]
@@ -69,7 +83,7 @@ def navigation(request, socket, context, message):
             socket.send(gpsInfo)
 
     except:
-        print "Unexpected error:", sys.exc_info()[0]
+        print "Unexpected error: -z-", sys.exc_info()[0]
 
 def evalue_wa(ws,ad):
     if ws > 120:
