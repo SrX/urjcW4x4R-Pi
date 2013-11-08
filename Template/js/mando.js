@@ -41,6 +41,9 @@ $(document).ready(function() {
     $("#stop").click(function () {
        socket.send({action: 'q'});
     });
+    $("#startroute").click(function () {
+        socket.send({action: 'startroute'});
+    });
 
 
     SendInputKey = function() {

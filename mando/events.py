@@ -31,6 +31,17 @@ inc = 3;
 #         cor = Coord.objects.create(route=rout,lat=float(pp[0]),lon=float(pp[1]),speed=float(pp[2]),track=float(pp[3]),time=pp[4]);
 #         #return [lat, lon,speed,time,track]
 
+def from_gps_to_bdd():
+    try:
+        rout = Route.objects.create(name="Track95");
+        for i in range(1, 300): 
+            cp=_gps.update();
+            if (i % 5) == 0 and float(cp['lon'])!=0.0:
+                cor = Coord.objects.create(route=rout, lat=float(cp['lat']), lon=float(cp['lon']), track=float(cp['track']), speed=float(cp['speed']), time=cp['time']);
+                print "Punto nuevo"
+    except:
+        print "Unexpected error: -z-", sys.exc_info()[0]
+
 def do_route(rid):
     print 'do_route'
     rout = Route.objects.get(id=4);
@@ -51,7 +62,7 @@ def navigation(request, socket, context, message):
         elif message['action'] == 'get_route':
             #print "get_route"
             route = {};
-            rout = Route.objects.get(id=4);
+            rout = Route.objects.get(name="Track95");
             coords = Route.get_only_coord(rout);
             route = {'action':'route','series': {"label": "Route0", "data":coords}}
             socket.send(route)
@@ -118,6 +129,9 @@ def message(request, socket, context, message):
         elif message['action'] == 'q':
             var.ad_value = 90;
             var.ws_value = 90;
+        elif message['action'] == 'startroute':
+            from_gps_to_bdd();
+
             
         var.ws_value, var.ad_value = evalue_wa(var.ws_value, var.ad_value)
 
