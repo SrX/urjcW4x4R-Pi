@@ -2,7 +2,7 @@ from django_socketio import events
 from variables import variables as var
 
 from variables import _gps as _gps
-#from variables import vehicle as vehicle
+from variables import vehicle as vehicle
 
 from navigation.models import Route, Coord;
 import sys
@@ -45,8 +45,13 @@ def navigation(request, socket, context, message):
 
         elif message['action'] == 'get_gps_data':
             try:
-                print _gps
-                _gps.next()
+                #print _gps
+
+                try:
+                    _gps.next()
+                except: 
+                    print "Unexpected error: _gps.next() ", sys.exc_info()[0]
+                
 
                 gpsData =  {'lat'   :   _gps.fix.latitude,
                             'lon'   :   _gps.fix.longitude,
