@@ -31,8 +31,7 @@ inc = 3;
 #         cor = Coord.objects.create(route=rout,lat=float(pp[0]),lon=float(pp[1]),speed=float(pp[2]),track=float(pp[3]),time=pp[4]);
 #         #return [lat, lon,speed,time,track]
 
-<<<<<<< HEAD
-=======
+
 def from_gps_to_bdd():
     try:
         rout = Route.objects.create(name="Track95");
@@ -48,7 +47,7 @@ def do_route(rid):
     print 'do_route'
     rout = Route.objects.get(id=4);
     coords = Route.get_only_coord(rout);
->>>>>>> 8a96186b7e92e606a42eb32eeef9de03cbfbcf1d
+
 
 #coords.append([o.lat, o.lon])
 #def distance_to(point, to_point):
@@ -93,7 +92,7 @@ def navigation(request, socket, context, message):
 
             try:
                 rout = {}
-                rout = Route.objects.get(id=4);
+                rout = Route.objects.get(name="Track95");
                 coords = Route.get_only_coord(rout);
                 coords = coords[1:10]
                 for point in coords:
@@ -102,7 +101,6 @@ def navigation(request, socket, context, message):
                     while not reached:
                         gpsData = _gps.update()
                         dist = distance_to(gpsData, point)
-                        #time.sleep(0.05)
 
                         print str(point) +'   '+ str(dist)
                         

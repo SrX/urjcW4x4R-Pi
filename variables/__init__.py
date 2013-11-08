@@ -75,22 +75,8 @@ class Control(object):
             self.arduino_conect.write(chr(grados))
 
 
-<<<<<<< HEAD
-try:
-    vehicle = Control();
-except: 
-    print "Unexpected error:", sys.exc_info()[0]
-    pass
-#no quiere sin /dev/ttyUSB0
 
 
-_gps = StartGps()
-
-
-
-
-
-=======
 vehicle = Control();
 _gps = StartGps();
->>>>>>> 8a96186b7e92e606a42eb32eeef9de03cbfbcf1d
+

@@ -46,7 +46,8 @@ $(function() {
                     var dl = data.length;
                     for (var i = 0; i < dl; i++) {
                         if (data[i].label == series.label) {
-                            data[i].data = series.data;
+                            data[i] = series
+                            console.log(data[i]);
                         }
                     }
                 } else {
@@ -108,7 +109,8 @@ $(function() {
                 //"nextPoin": point, 'distance_to': dist}, 'navigation')
                 var upData = {
                     label: 'nextPoint',
-                    data: [rxdata.nextPoint, [rxdata.gpsData.lat, rxdata.gpsData.lon]]
+                    data: [rxdata.nextPoint, [rxdata.gpsData.lat, rxdata.gpsData.lon]],
+                    color:7
                 }
                 onDataReceived(upData);
                 if (rxdata.gpsData != '') {
@@ -116,7 +118,8 @@ $(function() {
                         label: 'GPS',
                         data: [
                             [rxdata.gpsData.lat, rxdata.gpsData.lon]
-                        ]
+                        ],
+                        color:4
                     };
                     onDataReceived(series);
                 }
@@ -133,7 +136,6 @@ $(function() {
         console.log("connected");
         socket.subscribe('navigation');
 
-        //socket.send({hola:"hola hola->"});
         socket.send({
             action: 'get_route'
         });
