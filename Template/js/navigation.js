@@ -1,112 +1,130 @@
 $(function() {
-    // add zoom out button 
+        // add zoom out button 
 
-    var options = {
+        var options = {
             series: {
-                lines: { show: true },
-                points: { show: true }
+                lines: {
+                    show: true
+                },
+                points: {
+                    show: true
+                }
             },
-        xaxis: {
-            tickDecimals: 0,
-            tickSize: 1
-        },
-        zoom: {
-            interactive: true
-        },
-        pan: {
-            interactive: true
-        }
-    };
-    var data = [];
-    var navi_map = $("#navi_map");
+            xaxis: {
+                tickDecimals: 0,
+                tickSize: 1
+            },
+            zoom: {
+                interactive: true
+            },
+            pan: {
+                interactive: true
+            }
+        };
+        var data = [];
+        var navi_map = $("#navi_map");
 
-    $.plot(navi_map, data, options);
-
-
-    // fetch one series, adding to what we got
-    var alreadyFetched = {};
+        $.plot(navi_map, data, options);
 
 
-    // then fetch the data with jQuery
+        // fetch one series, adding to what we got
+        var alreadyFetched = {};
 
-    function onDataReceived(series) {
-        console.log("onDataReceived");
 
-        if (!alreadyFetched[series.label]) {
-            alreadyFetched[series.label] = true;
-            data.push(series);
-        } else {
-            var dl = data.length;
-            for (var i = 0; i < dl; i++) {
-                if (data[i].label == series.label) {
-                    data[i].data = data[i].data.concat(series.data);
+        // then fetch the data with jQuery
+
+        function onDataReceived(series) {
+            console.log("onDataReceived");
+
+
+            if (!alreadyFetched[series.label]) {
+                alreadyFetched[series.label] = true;
+                data.push(series);
+            } else {
+                if (series.label == 'nextPoint') {
+
+                    var dl = data.length;
+                    for (var i = 0; i < dl; i++) {
+                        if (data[i].label == series.label) {
+                            data[i].data = series.data;
+                        }
+                    }
+                } else {
+
+
+                    var dl = data.length;
+                    for (var i = 0; i < dl; i++) {
+                        if (data[i].label == series.label) {
+                            data[i].data = data[i].data.concat(series.data);
+                        }
+                    }
                 }
             }
-        }
-        $.plot(navi_map, data, options);
-        console.log("puntos pintados");
-    }
-    // insert checkboxes 
-    var choiceContainer = $("#choices");
-    $.each(data, function(key, val) {
-        choiceContainer.append("<br/><input type='checkbox' name='" + key +
-            "' checked='checked' id='id" + key + "'></input>" +
-            "<label for='id" + key + "'>" + val.label + "</label>");
-    });
 
-    choiceContainer.find("input").click(plotAccordingToChoices);
 
-    function plotAccordingToChoices() {
-
-        var xdata = [];
-
-        choiceContainer.find("input:checked").each(function() {
-            var key = $(this).attr("name");
-            if (key && data[key]) {
-                xdata.push(data[key]);
-            }
-        });
-        if (data.length > 0) {
-            $.plot(navi_map, xdata, options);
+            $.plot(navi_map, data, options);
+            console.log("puntos pintados");
         }
 
-    };
-
-    plotAccordingToChoices();
 
 
-    $( "#do_route" ).click(function() {
+    $("#do_route").click(function() {
         console.log('do_route');
-      socket.send({
+        socket.send({
             action: 'do_route',
             'route_id': 4
         });
     });
 
-    var messaged = function(data) {
+    var messaged = function(rxdata) {
         console.log("messaged_data_navigation");
         console.log(data);
-        switch (data.action) {
+        switch (rxdata.action) {
             case 'route':
-                onDataReceived(data.series);
+                onDataReceived(rxdata.series);
                 break;
 
             case 'coord_inLine':
-                onDataReceived(data.series);
+                onDataReceived(rxdata.series);
                 break;
 
             case 'gpsInfo':
-                console.log(data.gpsData);
-                if (data.gpsData != '') {
+                console.log(rxdata.gpsData);
+                if (rxdata.gpsData != '') {
                     var series = {
                         label: 'GPS',
                         data: [
-                            [data.gpsData.lat, data.gpsData.lon]
+                            [rxdata.gpsData.lat, rxdata.gpsData.lon]
                         ]
                     };
                     onDataReceived(series);
                 }
                 break;
+
+            case 'do_route':
+            console.log(rxdata.gpsData);
+                //console.log(data);
+                //socket.broadcast_channel({"action": "do_route", "gpsData": gpsData,
+                //"nextPoin": point, 'distance_to': dist}, 'navigation')
+                var upData = {
+                    label: 'nextPoint',
+                    data: [rxdata.nextPoint, [rxdata.gpsData.lat, rxdata.gpsData.lon]]
+                }
+                onDataReceived(upData);
+                if (rxdata.gpsData != '') {
+                    var series = {
+                        label: 'GPS',
+                        data: [
+                            [rxdata.gpsData.lat, rxdata.gpsData.lon]
+                        ]
+                    };
+                    onDataReceived(series);
+                }
+                console.log("DOXROUTE");
+                break;
+
+            default:
+                console.log("BlaBlaBLa");
 
         }
     };
@@ -127,7 +145,7 @@ $(function() {
         socket.send({
             action: 'get_gps_data'
         });
-        setTimeout(get_gps_data, 300);
+        //setTimeout(get_gps_data, 3000);
     }
 
     var disconnected = function() {
