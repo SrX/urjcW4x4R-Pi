@@ -26,6 +26,22 @@ $(document).ready(function() {
         }
     });
 
+    $("#w").click(function () {
+        socket.send({action: 'w'});
+    });
+    $("#s").click(function () {
+        socket.send({action: 's'});
+    });
+    $("#a").click(function () {
+        socket.send({action: 'a'});
+    });
+    $("#d").click(function () {
+        socket.send({action: 'd'});
+    });
+    $("#stop").click(function () {
+       socket.send({action: 'q'});
+    });
+
 
     SendInputKey = function() {
         var move = ''
