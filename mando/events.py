@@ -67,6 +67,14 @@ def navigation(request, socket, context, message):
             route = {'action':'route','series': {"label": "Route0", "data":coords}}
             socket.send(route)
 
+        elif message['action'] == 'get_routes':
+            print "BUENAAAAAAAAAAAAAAAAAAAAAAAS"
+            routes = Route.objects.all();
+            print "HOLAAAAAAAAAAAA"
+            print routes;
+            #route = {'action':'route','series': {"label": "Route0", "data":coords}}
+            #socket.send(route)
+
         elif message['action'] == 'get_gps_data':
             try:
                 # #print _gps

@@ -117,10 +117,9 @@ $(function() {
 
         //socket.send({hola:"hola hola->"});
         socket.send({
-            action: 'get_route',
-            'route_id': 0
+            action: 'get_route'
         });
-        get_gps_data();
+        //get_gps_data();
     };
 
     var get_gps_data = function() {
