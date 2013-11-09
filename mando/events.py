@@ -10,7 +10,7 @@ import sys
 
 import gps
 
-
+import time
 # import xml.etree.ElementTree as ET
 # from xml.dom import minidom
 
@@ -33,6 +33,7 @@ nameroute = "Ruta 1 de cada 5"
 #         cor = Coord.objects.create(route=rout,lat=float(pp[0]),lon=float(pp[1]),speed=float(pp[2]),track=float(pp[3]),time=pp[4]);
 #         #return [lat, lon,speed,time,track]
 
+
 def from_gps_to_bdd(intervalo):
     try:
         #rout = Route.objects.create(name="Route " + str(var.nroute));
@@ -52,17 +53,79 @@ def do_route(rid):
     rout = Route.objects.get(id=4);
     coords = Route.get_only_coord(rout);
 
-    for point in coords:
-        gpsPoint = 12
-    #print coords
-    pass
+
+#coords.append([o.lat, o.lon])
+#def distance_to(point, to_point):
+
+# def do_route(rid,socket):
+#     socket.broadcast_channel({"action": "do_route", "started": 'yes'}, 'navigation')
+
+#     print 'do_route'
+#     rout = Route.objects.get(id=4);
+#     coords = Route.get_only_coord(rout);
+
+#     for point in coords:
+        
+#         reached = False;
+#         while not reached:
+#             gpsData = _gps.update()
+#             dist = distance_to(gpsData, point)
+#             print str(point) + str(dist)
+#             socket.send_and_broadcast_channel({"action": "do_route", "gpsData": gpsData,"nextPoin": point,
+#                                      'distance_to': dist})
+
+#             if dist < 100:
+#                 reached = True
+
+#     socket.broadcast_channel({"action": "do_route", "finish": 'yes'}, 'navigation')
+
+#     print "Ruta Terminada"
+#     #print coords
+#     pass
 
 @events.on_message(channel="navigation")
 def navigation(request, socket, context, message):
     print 'chan chan chan'
     try:
         if message['action'] == 'do_route':
-            do_route(message['route_id']);
+
+            try:
+                socket.send({"action": "xdo_route", "started": 'yes'})
+            except:
+                print "Unexpected error do_route:", sys.exc_info()[0]
+
+
+            try:
+                rout = {}
+                rout = Route.objects.get(name="Track95");
+                coords = Route.get_only_coord(rout);
+                coords = coords[1:10]
+                for point in coords:
+                    print 'do_route'
+                    reached = False;
+                    while not reached:
+                        gpsData = _gps.update()
+                        dist = distance_to(gpsData, point)
+
+                        print str(point) +'   '+ str(dist)
+                        
+                        try:
+                            route = {"action": "do_route", "gpsData": gpsData,"nextPoin": point, 'distance_to': dist}
+                            socket.send(route)
+                        except:
+                            print "Unexpected error do_route:", sys.exc_info()[0]
+
+                        #socket.send({"action": "dox_route", "gpsData": gpsData,"nextPoin": point, 'distance_to': dist})
+                        print ' -z'
+
+                        if dist < 100:
+                            reached = True
+
+                socket.send({"action": "xdo_route", "finish": 'yes'})
+            except:
+                print "Unexpected error do_route after:", sys.exc_info()[0]
+            print 'do_route'
+            print "Ruta Terminada"
 
         elif message['action'] == 'get_route':
             #print "get_route"
@@ -82,25 +145,12 @@ def navigation(request, socket, context, message):
                 routeinfo.append(route.id)
                 routeslist.append(routeinfo)
             print "AQUIIIIIIIII"
+            print routeslist
             route2 = {'action':'aroutes','info': routeslist}
             socket.send(route2)
 
         elif message['action'] == 'get_gps_data':
             try:
-                # #print _gps
-
-                # try:
-                #     _gps.next()
-                # except: 
-                #     print "Unexpected error: _gps.next() ", sys.exc_info()[0]
-                
-
-                # gpsData =  {'lat'   :   _gps.fix.latitude,
-                #             'lon'   :   _gps.fix.longitude,
-                #             'track' :   _gps.fix.track,
-                #             'speed' :   _gps.fix.speed,
-                #             'time'  :   _gps.fix.time }
-                # #print gpsData
                 gpsData = _gps.update()
                 gpsInfo = {'action':'gpsInfo','gpsData': gpsData}
             except:
@@ -165,58 +215,60 @@ def message(request, socket, context, message):
     print 'out'
 
 
+#################################
 
-# #################################################################################################
-# class Point:
-#     "Optimizar la parte de abrir y cerrar el fichero"
-#     def __init__ (self, fichin, fichout):
-#         self.numelem = 0
-#         try:
-#             self.tree = ET.parse(fichin)
-#             self.root = self.tree.getroot()
-#         except:
-#             print "Ausencia de fichero de entrada"
-#         try:
-#             self.fichout=fichout
-#             fichero = open(self.fichout, "w+")
-#             implementacion_DOM = minidom.getDOMImplementation()
-#             self.xml_document = implementacion_DOM.createDocument(None, "data", None)
-#             self.xml_document.writexml(fichero, encoding='utf-8')
-#             fichero.close()
-#         except:
-#             print "Ausencia de fichero de salida"
+from math import *
 
-#     def get(self):
-#         """Devuelve la latitud y la longitud en una lista."""
-#         try:
-#             lat = self.root[self.numelem][0].text
-#             lon = self.root[self.numelem][2].text
-#             speed = self.root[self.numelem][1].text
-#             time = self.root[self.numelem][3].text
-#             track = self.root[self.numelem][4].text
-#             self.numelem += 1
-#             return [lat, lon,speed,time,track]
-#         except:
-#             return 0
+#http://www.todopic.com.ar/foros/index.php?PHPSESSID=nvmismbs6oqmqvaf47euhib115&topic=26373.msg216172#msg216172
+def distance_to(point, to_point):
+    try:
+        lat1 = radians(float(point['lat']))
+        lon1 = radians(float(point['lon']))
+        
+        lat2 = radians(float(to_point[0]))
+        lon2 = radians(float(to_point[1]))
 
-#     def put(self, datadic):
-#         """Recibe un diccionario y mete esos datos en un fichero xml"""
-#         try:
-#             raiz_documento = self.xml_document.documentElement
-#             #Creo nodo
-#             nodo = self.xml_document.createElement("coordenada")
-#             #Creo elemento
-#             for key in datadic.keys():
-#                 elemento = self.xml_document.createElement(key)
-#                 #innerXML, text
-#                 elemento.appendChild(self.xml_document.createTextNode(str(datadic[key])))
-#                 #Anido elemento en nodo
-#                 nodo.appendChild(elemento)
-#                 #Anido nodo en raiz
-#             raiz_documento.appendChild(nodo)
-#             fichero = open(self.fichout, "w")
-#             self.xml_document.writexml(fichero, encoding='utf-8')
-#             fichero.close()
-#             return 1
-#         except:
-#             return 0
+        d = (acos(sin(lat1) * sin(lat2) \
+              + cos(lat1) * cos(lat2) \
+              * cos(lon1 - lon2)) * (6372797.560856 + 640)*100 )
+        return d # ESTA EN CM
+    except:
+        print "Unexpected error: distance_to: ", sys.exc_info()[0]
+    
+def heading_to(point, to_point):
+    try:
+        lat1 = radians(float(point[0]))
+        lon1 = radians(float(point[1]))
+        
+        lat2 = radians(float(to_point['lat']))
+        lon2 = radians(float(to_point['lon']))
+        
+        y = sin(lon2-lon1) * cos(lat2)
+        x = cos(lat1) * sin(lat2) \
+          - sin(lat1) * cos(lat2) \
+          * cos(lon2-lon1)
+        
+        return (((degrees(atan2(y, x))+360-180) % 360))
+    except:
+        return -1
+
+def get_angle_diff(track, heading_to):
+    Total = float(heading_to) - (track)
+    
+    if Total > 180.0:
+        Total = - (360 - Total)
+    elif Total < -180.0:
+        Total = 360 + Total
+    return Total
+
+def angle_to_turn_angle(angle):
+    #ajustar angulo a partir del cual se hace maximo giro
+    #valores negativos hacia la izquierda, valores < 90
+    #valores positivos hacia la derecha, valores > 90
+    if angle>90:
+        turn_angle=120;
+    elif angle<-90:
+        turn_angle=60;
+    else:
+        turn_angle=angle/3+90
+    return int(turn_angle)

@@ -75,5 +75,8 @@ class Control(object):
             self.arduino_conect.write(chr(grados))
 
 
+
+
 vehicle = Control();
 _gps = StartGps();
+
