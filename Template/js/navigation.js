@@ -1,6 +1,14 @@
 $(function() {
     // add zoom out button 
 
+    function createnode(elem, id, nameclass, html){
+        var item = document.createElement(elem);
+        item.setAttribute("id",id);
+        item.setAttribute('class', nameclass);
+        item.innerHTML = html;
+        return item
+    }
+
     var options = {
             series: {
                 lines: { show: true },
@@ -107,7 +115,19 @@ $(function() {
                     onDataReceived(series);
                 }
                 break;
-
+            case 'aroutes':
+                $.each( data.info, function( key, value ) {
+                    var node = createnode('div', value[1], 'ruta', value[0])
+                    $("#listarutas").append(node)
+                });
+                $("#listarutas").hide();
+                $(".ruta").click(function () {
+                    socket.send({
+                        action: 'get_route',
+                        'route_id': $(this).attr("id")
+                    });
+                });
+                break;
         }
     };
 
@@ -117,9 +137,9 @@ $(function() {
 
         //socket.send({hola:"hola hola->"});
         socket.send({
-            action: 'get_route'
+            action: 'get_routes'
         });
-        //get_gps_data();
+        get_gps_data();
     };
 
     var get_gps_data = function() {
@@ -141,6 +161,14 @@ $(function() {
         socket.on('disconnect', disconnected);
         socket.on('message', messaged);
     };
+
+    $("#switchrutas").click(function(i) {
+        if ($(this).parent().children("#listarutas").is(":hidden")){
+            $(this).parent().children("#listarutas").slideDown("slow");
+        } else {
+            $(this).parent().children("#listarutas").hide("slow");
+        }
+    })
 
     start();
 

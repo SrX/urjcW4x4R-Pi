@@ -17,6 +17,8 @@ import gps
 # from gps_navigation.gpsData import gpsData
 
 inc = 3;
+intervalo = 5;
+nameroute = "Ruta 1 de cada 5"
 # def to_bdd():
 #     point = Point('trackcompleto.xml','tr.xml')
 #     pp = point.get();
@@ -31,14 +33,17 @@ inc = 3;
 #         cor = Coord.objects.create(route=rout,lat=float(pp[0]),lon=float(pp[1]),speed=float(pp[2]),track=float(pp[3]),time=pp[4]);
 #         #return [lat, lon,speed,time,track]
 
-def from_gps_to_bdd():
+def from_gps_to_bdd(intervalo):
     try:
-        rout = Route.objects.create(name="Track95");
-        for i in range(1, 300): 
+        #rout = Route.objects.create(name="Route " + str(var.nroute));
+        rout = Route.objects.create(name=nameroute);
+        print "Guardando en base de datos nueva ruta.."
+        for i in range(1, 400):
             cp=_gps.update();
-            if (i % 5) == 0 and float(cp['lon'])!=0.0:
+            if (i % intervalo) == 0 and float(cp['lon'])!=0.0:
                 cor = Coord.objects.create(route=rout, lat=float(cp['lat']), lon=float(cp['lon']), track=float(cp['track']), speed=float(cp['speed']), time=cp['time']);
-                print "Punto nuevo"
+        #var.nroute+=1;
+        print "Nueva ruta guardada en base de datos"
     except:
         print "Unexpected error: -z-", sys.exc_info()[0]
 
@@ -62,18 +67,23 @@ def navigation(request, socket, context, message):
         elif message['action'] == 'get_route':
             #print "get_route"
             route = {};
-            rout = Route.objects.get(name="Track95");
+            rout = Route.objects.get(id=message['route_id']);
             coords = Route.get_only_coord(rout);
-            route = {'action':'route','series': {"label": "Route0", "data":coords}}
+            route = {'action':'route','series': {"label": rout.name, "data":coords}}
             socket.send(route)
 
         elif message['action'] == 'get_routes':
-            print "BUENAAAAAAAAAAAAAAAAAAAAAAAS"
             routes = Route.objects.all();
-            print "HOLAAAAAAAAAAAA"
             print routes;
-            #route = {'action':'route','series': {"label": "Route0", "data":coords}}
-            #socket.send(route)
+            routeslist=[]
+            for route in routes:
+                routeinfo=[]
+                routeinfo.append(route.name)
+                routeinfo.append(route.id)
+                routeslist.append(routeinfo)
+            print "AQUIIIIIIIII"
+            route2 = {'action':'aroutes','info': routeslist}
+            socket.send(route2)
 
         elif message['action'] == 'get_gps_data':
             try:
@@ -138,7 +148,7 @@ def message(request, socket, context, message):
             var.ad_value = 90;
             var.ws_value = 90;
         elif message['action'] == 'startroute':
-            from_gps_to_bdd();
+            from_gps_to_bdd(intervalo);
 
             
         var.ws_value, var.ad_value = evalue_wa(var.ws_value, var.ad_value)

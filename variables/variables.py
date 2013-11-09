@@ -5,7 +5,7 @@
 # Create your models here.
 ws_value = 90
 ad_value = 90
-nrutas = 0
+nroute = 1
 #car = CC.Control("/dev/ttyUSB0")
 
 #gps = gData.Start()

@@ -101,3 +101,14 @@ input[type=checkbox] {
 .legend table {
 	border-spacing: 5px;
 }
+
+#rutas{
+	display: block;
+	float:left;
+	cursor:pointer;
+	margin-left: 10px;
+}
+
+#switchrutas{
+	font-size:120%;
+}
