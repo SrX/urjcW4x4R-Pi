@@ -1,9 +1,9 @@
 $(function() {
-        // add zoom out button 
+    // add zoom out button 
 
-    function createnode(elem, id, nameclass, html){
+    function createnode(elem, id, nameclass, html) {
         var item = document.createElement(elem);
-        item.setAttribute("id",id);
+        item.setAttribute("id", id);
         item.setAttribute('class', nameclass);
         item.innerHTML = html;
         return item
@@ -88,7 +88,7 @@ $(function() {
 
     var messaged = function(rxdata) {
         console.log("messaged_data_navigation");
-        console.log(rxdata);
+        console.log(rxdata.action);
         switch (rxdata.action) {
             case 'route':
                 onDataReceived(rxdata.series);
@@ -111,12 +111,12 @@ $(function() {
                 }
                 break;
             case 'aroutes':
-                $.each( rxdata.info, function( key, value ) {
+                $.each(rxdata.info, function(key, value) {
                     var node = createnode('div', value[1], 'ruta', value[0])
                     $("#listarutas").append(node)
                 });
                 $("#listarutas").hide();
-                $(".ruta").click(function () {
+                $(".ruta").click(function() {
                     socket.send({
                         action: 'get_route',
                         'route_id': $(this).attr("id")
@@ -131,7 +131,7 @@ $(function() {
                 var upData = {
                     label: 'nextPoint',
                     data: [rxdata.nextPoint, [rxdata.gpsData.lat, rxdata.gpsData.lon]],
-                    color:7
+                    color: 7
                 }
                 onDataReceived(upData);
                 if (rxdata.gpsData != '') {
@@ -140,13 +140,15 @@ $(function() {
                         data: [
                             [rxdata.gpsData.lat, rxdata.gpsData.lon]
                         ],
-                        color:4
+                        color: 4
                     };
                     onDataReceived(series);
                 }
                 console.log("DOXROUTE");
                 break;
-
+            case 'blublu':
+                console.log('blueblue');
+                break;
             default:
                 console.log("BlaBlaBLa");
         }
@@ -159,14 +161,21 @@ $(function() {
         socket.send({
             action: 'get_routes'
         });
+
         get_gps_data();
+
+        socket.send({
+            action: 'blublu'
+        });
     };
 
     var get_gps_data = function() {
         socket.send({
             action: 'get_gps_data'
         });
-        setTimeout(get_gps_data, 3000);
+        setTimeout(get_gps_data, 500);
+
+
     }
 
     var disconnected = function() {
@@ -183,7 +192,7 @@ $(function() {
     };
 
     $("#switchrutas").click(function(i) {
-        if ($(this).parent().children("#listarutas").is(":hidden")){
+        if ($(this).parent().children("#listarutas").is(":hidden")) {
             $(this).parent().children("#listarutas").slideDown("slow");
         } else {
             $(this).parent().children("#listarutas").hide("slow");

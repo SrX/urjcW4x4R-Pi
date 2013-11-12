@@ -80,3 +80,6 @@ class Control(object):
 vehicle = Control();
 _gps = StartGps();
 
+
+
+ssoket = None

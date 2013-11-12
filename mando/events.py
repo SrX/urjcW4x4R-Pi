@@ -1,9 +1,10 @@
 from django_socketio import events
+from django_socketio import broadcast_channel
 from variables import variables as var
-
+import django_socketio
 from variables import _gps as _gps
 from variables import vehicle as vehicle
-
+from variables import ssoket as ssoket
 from navigation.models import Route, Coord;
 import sys
 
@@ -83,11 +84,43 @@ def do_route(rid):
 #     #print coords
 #     pass
 
+
+
+import thread
+import time
+
+
+
+# Define a function for the thread
+def print_time(threadName, delay,socket):
+   count = 0
+   while count < 5:
+    time.sleep(delay)
+    count += 1
+    route = {'action':threadName}
+    socket.send(route)
+    print "%s: %s" % ( threadName, time.ctime(time.time()) )
+
+# Create two threads as follows
+
+
+
 @events.on_message(channel="navigation")
 def navigation(request, socket, context, message):
     print 'chan chan chan'
     try:
-        if message['action'] == 'do_route':
+        if message['action'] == 'blublu':
+            print 'entro en condicion'
+            try:
+
+               thread.start_new_thread( print_time, ("Thread-1", 2, socket) )
+               thread.start_new_thread( print_time, ("Thread-2", 4,socket ) )
+
+            except:
+                print "Unexpected error blublu:", sys.exc_info()[0]
+            print 'saldo de condicion'
+
+        elif message['action'] == 'do_route':
 
             try:
                 socket.send({"action": "xdo_route", "started": 'yes'})
@@ -154,7 +187,7 @@ def navigation(request, socket, context, message):
                 gpsData = _gps.update()
                 gpsInfo = {'action':'gpsInfo','gpsData': gpsData}
             except:
-                print "Unexpected error ->:", sys.exc_info()[0]
+                print "Unexpected error get_gps_data ->:", sys.exc_info()[0]
 
                 gpsInfo = {'action':'gpsInfo','gpsData': ''}
 
