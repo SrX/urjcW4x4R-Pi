@@ -224,9 +224,9 @@ def message(request, socket, context, message):
         elif message['action'] == 's':
             var.ws_value-=inc
         elif message['action'] == 'd':
-            var.ad_value-=inc
-        elif message['action'] == 'a':
             var.ad_value+=inc
+        elif message['action'] == 'a':
+            var.ad_value-=inc
         elif message['action'] == 'q':
             var.ad_value = 90;
             var.ws_value = 90;
