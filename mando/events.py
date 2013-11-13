@@ -179,7 +179,7 @@ def navigation(request, socket, context, message):
                 routeslist.append(routeinfo)
             print "AQUIIIIIIIII"
             print routeslist
-            route2 = {'action':'aroutes','info': routeslist}
+            route2 = {'action':'get_routes','info': routeslist}
             socket.send(route2)
 
         elif message['action'] == 'get_gps_data':

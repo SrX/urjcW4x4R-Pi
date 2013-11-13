@@ -110,7 +110,7 @@ $(function() {
                     onDataReceived(series);
                 }
                 break;
-            case 'aroutes':
+            case 'get_routes':
                 $.each(rxdata.info, function(key, value) {
                     var node = createnode('div', value[1], 'ruta', value[0])
                     $("#listarutas").append(node)
