@@ -1,8 +1,4 @@
-'''
-Created on 10/05/2013
 
-@author: srx
-'''
 from math import *
 
 #http://www.todopic.com.ar/foros/index.php?PHPSESSID=nvmismbs6oqmqvaf47euhib115&topic=26373.msg216172#msg216172

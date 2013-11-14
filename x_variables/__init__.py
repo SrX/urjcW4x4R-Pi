@@ -45,39 +45,7 @@ class StartGps(object):
                         #'alt'  :   self._gps.fix.altitude,
                         }
 
-class Control(object):
 
-    # arreglar el fallo del log
-    def __init__ (self):
-        try:
-            self.arduino_conect = serial.Serial('/dev/ttyUSB0', 9600, timeout=1)
-        except: #except (StopIteration):
-            print "Unexpected error: Control ", sys.exc_info()[0]
-            self.arduino_conect = ''
-            pass
-    
-        self.speed(90)
-        self.turn(90)
-
-    def speed(self, velocidad):
-        print 'vehicle: v ' + str(velocidad)
-        if self.arduino_conect != '':
-            self.arduino_conect.write(chr(255))
-            self.arduino_conect.write(chr(2))
-            self.arduino_conect.write(chr(velocidad))
-
-
-    def turn(self, grados):
-        print 'vehicle: g ' + str(grados)
-        if self.arduino_conect != '':
-            self.arduino_conect.write(chr(255)) 
-            self.arduino_conect.write(chr(1))
-            self.arduino_conect.write(chr(grados))
-
-
-
-
-vehicle = Control();
 _gps = StartGps();
 
 
