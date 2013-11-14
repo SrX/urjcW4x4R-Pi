@@ -178,8 +178,7 @@ def navigation(request, socket, context, message):
                 routeinfo.append(route.id)
                 routeslist.append(routeinfo)
             print "AQUIIIIIIIII"
-            print routeslist
-            route2 = {'action':'aroutes', 'info': routeslist}
+            route2 = {'action':'get_routes','info': routeslist}
             socket.send(route2)
 
         elif message['action'] == 'get_gps_data':
@@ -224,9 +223,15 @@ def message(request, socket, context, message):
         elif message['action'] == 's':
             var.ws_value -= inc
         elif message['action'] == 'd':
+<<<<<<< HEAD
             var.ad_value -= inc
         elif message['action'] == 'a':
             var.ad_value += inc
+=======
+            var.ad_value+=inc
+        elif message['action'] == 'a':
+            var.ad_value-=inc
+>>>>>>> 64ff68e8b2559ede93be909a7b8696be3e952444
         elif message['action'] == 'q':
             var.ad_value = 90;
             var.ws_value = 90;
