@@ -5,16 +5,13 @@
     <meta charset="utf-8">
     <title>urjcW4x4R-PI</title>
     
+	<link rel="stylesheet" href="/static/pure-min.css">
+ 	{% block extra_css %}	{% endblock %}
 
-   
-
-
-    <link rel="stylesheet" href="/pure-min.css">
-    <script src="/jquery-latest.min.js"></script>
-   
-    {% block extra_js %}
-    {% endblock %}
-
+    
+   	<script src="/static/jquery-latest.min.js"></script>
+    {% block extra_js %}	{% endblock %}
+	
 </head>
 
 <body>
@@ -31,7 +28,7 @@
 </div>
 
 
-    {% block form %}{% endblock %}
+    {% block main %}{% endblock %}
 
 </body>
 

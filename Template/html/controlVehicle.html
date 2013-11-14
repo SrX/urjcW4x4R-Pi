@@ -1,106 +1,80 @@
  {% extends "base.html" %}
+ 
+ 	
+ 	{% block extra_css %}
+ 	
+ 	<link rel="stylesheet" href="/static/control.css">
+ 	
+ 	{% endblock %}
+ 
+ 
+  {% block extra_js %}
+   {% load socketio_tags %}
 
+	{% socketio %}
 
- {% block title %}Mando 4x4{% endblock %}
- {% block extra_css %}
-        <style TYPE="text/css"> 
-            body{
-                width:400px;
-                margin-top:70px;
-                margin-right:auto;
-                margin-left:auto;
-            }
+<script src="/static/mando.js"></script>
+{% endblock %} 
 
-
-            .button {
-               border: 2px solid #0a3c59;
-               background: #3e779d;
-               background: -webkit-gradient(linear, left top, left bottom, from(#65a9d7), to(#3e779d));
-               background: -webkit-linear-gradient(top, #65a9d7, #3e779d);
-               background: -moz-linear-gradient(top, #65a9d7, #3e779d);
-               background: -ms-linear-gradient(top, #65a9d7, #3e779d);
-               background: -o-linear-gradient(top, #65a9d7, #3e779d);
-               background-image: -ms-linear-gradient(top, #65a9d7 0%, #3e779d 100%);
-               padding: 5.5px 11px;
-               -webkit-border-radius: 6px;
-               -moz-border-radius: 6px;
-               border-radius: 6px;
-               -webkit-box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(255,255,255,0.4) 0 1px 0;
-               -moz-box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(255,255,255,0.4) 0 1px 0;
-               box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(255,255,255,0.4) 0 1px 0;
-               text-shadow: #7ea4bd 0 1px 0;
-               color: #06426c;
-               font-size: 21px;
-               font-family: helvetica, serif;
-               text-decoration: none;
-               vertical-align: middle;
-               }
-            .button:hover {
-               border: 2px solid #0a3c59;
-               text-shadow: #1e4158 0 1px 0;
-               background: #3e779d;
-               background: -webkit-gradient(linear, left top, left bottom, from(#65a9d7), to(#3e779d));
-               background: -webkit-linear-gradient(top, #65a9d7, #3e779d);
-               background: -moz-linear-gradient(top, #65a9d7, #3e779d);
-               background: -ms-linear-gradient(top, #65a9d7, #3e779d);
-               background: -o-linear-gradient(top, #65a9d7, #3e779d);
-               background-image: -ms-linear-gradient(top, #65a9d7 0%, #3e779d 100%);
-               color: #fff;
-               }
-            .button:active {
-               text-shadow: #1e4158 0 1px 0;
-               border: 2px solid #0a3c59;
-               background: #65a9d7;
-               background: -webkit-gradient(linear, left top, left bottom, from(#3e779d), to(#3e779d));
-               background: -webkit-linear-gradient(top, #3e779d, #65a9d7);
-               background: -moz-linear-gradient(top, #3e779d, #65a9d7);
-               background: -ms-linear-gradient(top, #3e779d, #65a9d7);
-               background: -o-linear-gradient(top, #3e779d, #65a9d7);
-               background-image: -ms-linear-gradient(top, #3e779d 0%, #65a9d7 100%);
-               color: #fff;
-               }
-
-               #a {
-                width: 100px;
-               }
-               #d{
-                width: 100px;
-               }
-
-               #w {
-                width: 300px;
-               }
-               #s{
-                width: 300px;
-               }
-               .botones{
-                width: 350px;
-               }
-
-        </style>
-{% endblock %}
-
-{% block extra_js %}
-{% load socketio_tags %}
-{% socketio %}
-    <script src="/static/mando.js"></script>
-{% endblock %}
 
 {% block main %}
+<div class="controls">
+	<table class="pure-table">
+		<thead>
+			<tr>
+				<th>Velocidad</th>
+				<th>Giro</th>
+			</tr>
+		</thead>
 
-        <p>Velocidad: <div id="velocidad">90</div></p>
-        <p>Giro: <div id="giro">90</div></p>
+		<tbody>
+			<tr class="pure-table-odd">
+				<td><div id="velocidad">90</div></td>
+				<td><div id="giro">90</div></td>
+			</tr>
+		</tbody>
+	</table>
 
-<div class="botones">
-        <div id="w" class="button">Adelante</div>
-        <div id="a" class="button">Izquierda</div>
-        <div id="d" class="button">Derecha</div>
-        <div id="s" class="button">Atras</div>
-        <div id="stop" class="button">STOP</div>
-        <div id="startroute" class="button">Grabar ruta</div>
-        <div id="stoproute" class="button">Parar ruta</div>
+	<table class="pure-table">
+		<tbody>
+			<tr>
+				<td></td>
+				<td><button id="w" class="pure-button pure-button-success">W</button></td>
+				<td></td>
+			</tr>
+
+			<tr>
+				<td><button id="a" class="pure-button pure-button-secondary">A</button></td>
+				<td><button id="s" class="pure-button pure-button-success">S
+					</button></td>
+				<td><button id="d" class="pure-button pure-button-secondary">D</button></td>
+			</tr>
+
+			<tr>
+				<td colspan="3"><button id="stop"
+						class="pure-button pure-button-error" stype="width:150px">STOP</button></td>
+			</tr>
+		</tbody>
+	</table>
 </div>
 
+<div class="botones">
+	<div id="w" class="button">Adelante</div>
+	<div id="a" class="button">Izquierda</div>
+	<div id="d" class="button">Derecha</div>
+	<div id="s" class="button">Atras</div>
+	<div id="stop" class="button">STOP</div>
+	<div id="startroute" class="button">Grabar ruta</div>
+	<div id="stoproute" class="button">Parar ruta</div>
+</div>
+
+<p>Velocidad: 
+<div id="velocidad">90</div>
+</p>
+<p>Velocidad:
+<div id="giro">90</div>
+</p>
 
 
 {% endblock %}
+
