@@ -1,10 +1,7 @@
 from django_socketio import events
 from django_socketio import broadcast_channel
-from variables import variables as var
-import django_socketio
-from variables import _gps as _gps
-from variables import vehicle as vehicle
-from variables import ssoket as ssoket
+
+
 from navigation.models import Route, Coord;
 
 import sys
@@ -159,7 +156,7 @@ def navigation(request, socket, context, message):
                 routeinfo.append(route.id)
                 routeslist.append(routeinfo)
             print "AQUIIIIIIIII"
-            route2 = {'action':'get_routes','info': routeslist}
+            route2 = {'action':'get_routes', 'info': routeslist}
             socket.send(route2)
 
         elif message['action'] == 'get_gps_data':
