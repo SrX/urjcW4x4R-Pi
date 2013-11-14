@@ -16,7 +16,7 @@ urlpatterns = patterns('',
     url(r'^$', 'index.views.to_index'),
     url(r'^index$', 'index.views.index'),
 
-    url(r'^mando$', 'mando.views.mando'),
+    url(r'^controlVehicle$', 'controlVehicle.views.controlVehicle'),
 
     url(r'^log$', 'logger.views.log'),
 

@@ -2,7 +2,7 @@
 from django.shortcuts import get_object_or_404, render, redirect
 
 
-def mando(request, template="mando.html"):
+def controlVehicle(request, template="controlVehicle.html"):
     context = {}
     return render(request, template, context)
-# Create your views here.
+

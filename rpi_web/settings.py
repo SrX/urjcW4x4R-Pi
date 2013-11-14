@@ -126,7 +126,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_socketio',
     'index',
-    'mando',
+    'controlVehicle',
     'logger',
     'navigation',
     'gps_navigation',

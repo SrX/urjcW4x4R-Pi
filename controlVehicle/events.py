@@ -1,18 +1,13 @@
 from django_socketio import events
 from django_socketio import broadcast_channel
 
-from mando import *
+from controlVehicle import *
 
 
 from navigation.models import Route, Coord;
 
-import sys
-
 import time
 
-
-intervalo = 5;
-nameroute = "Ruta 1 de cada 5"
 
 
 @events.on_message(channel="hand_control")
@@ -27,10 +22,15 @@ def message(request, socket, context, message):
             
             socket.send_and_broadcast_channel(ret)
     except:
-        raises
+        raise
     
-    
+
+
+
+
 def from_gps_to_bdd(intervalo):
+    intervalo = 5;
+    nameroute = "Ruta 1 de cada 5"
     try:
         # rout = Route.objects.create(name="Route " + str(var.nroute));
         rout = Route.objects.create(name=nameroute);
@@ -42,7 +42,7 @@ def from_gps_to_bdd(intervalo):
         # var.nroute+=1;
         print "Nueva ruta guardada en base de datos"
     except:
-        print "Unexpected error: -z-", sys.exc_info()[0]
+        raise
 
 
 
