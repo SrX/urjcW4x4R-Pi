@@ -8,22 +8,9 @@ import sys
 import gps
 import time
 
+import threading
 
-intervalo = 5;
-nameroute = "Ruta 1 de cada 5"
-# def to_bdd():
-#     point = Point('trackcompleto.xml','tr.xml')
-#     pp = point.get();
-#     print pp
-#     rout = Route.objects.create(name="TrackCompleto");
-#     pp == -1
-#     k=0;
-#     while pp != 0 or k>5:
-#         pp = point.get();
-#         print pp
-#         k+=1;
-#         cor = Coord.objects.create(route=rout,lat=float(pp[0]),lon=float(pp[1]),speed=float(pp[2]),track=float(pp[3]),time=pp[4]);
-#         #return [lat, lon,speed,time,track]
+
 
 
 
@@ -172,4 +159,21 @@ def navigation(request, socket, context, message):
             socket.send(gpsInfo)
 
     except:
-        print "Unexpected error: -z-", sys.exc_info()[0]
+        raise
+        
+        
+        
+        
+# def to_bdd():
+#     point = Point('trackcompleto.xml','tr.xml')
+#     pp = point.get();
+#     print pp
+#     rout = Route.objects.create(name="TrackCompleto");
+#     pp == -1
+#     k=0;
+#     while pp != 0 or k>5:
+#         pp = point.get();
+#         print pp
+#         k+=1;
+#         cor = Coord.objects.create(route=rout,lat=float(pp[0]),lon=float(pp[1]),speed=float(pp[2]),track=float(pp[3]),time=pp[4]);
+#         #return [lat, lon,speed,time,track]
