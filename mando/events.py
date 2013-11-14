@@ -37,14 +37,14 @@ nameroute = "Ruta 1 de cada 5"
 
 def from_gps_to_bdd(intervalo):
     try:
-        #rout = Route.objects.create(name="Route " + str(var.nroute));
+        # rout = Route.objects.create(name="Route " + str(var.nroute));
         rout = Route.objects.create(name=nameroute);
         print "Guardando en base de datos nueva ruta.."
         for i in range(1, 400):
-            cp=_gps.update();
-            if (i % intervalo) == 0 and float(cp['lon'])!=0.0:
+            cp = _gps.update();
+            if (i % intervalo) == 0 and float(cp['lon']) != 0.0:
                 cor = Coord.objects.create(route=rout, lat=float(cp['lat']), lon=float(cp['lon']), track=float(cp['track']), speed=float(cp['speed']), time=cp['time']);
-        #var.nroute+=1;
+        # var.nroute+=1;
         print "Nueva ruta guardada en base de datos"
     except:
         print "Unexpected error: -z-", sys.exc_info()[0]
@@ -55,8 +55,8 @@ def do_route(rid):
     coords = Route.get_only_coord(rout);
 
 
-#coords.append([o.lat, o.lon])
-#def distance_to(point, to_point):
+# coords.append([o.lat, o.lon])
+# def distance_to(point, to_point):
 
 # def do_route(rid,socket):
 #     socket.broadcast_channel({"action": "do_route", "started": 'yes'}, 'navigation')
@@ -92,14 +92,14 @@ import time
 
 
 # Define a function for the thread
-def print_time(threadName, delay,socket):
+def print_time(threadName, delay, socket):
    count = 0
    while count < 5:
     time.sleep(delay)
     count += 1
     route = {'action':threadName}
     socket.send(route)
-    print "%s: %s" % ( threadName, time.ctime(time.time()) )
+    print "%s: %s" % (threadName, time.ctime(time.time()))
 
 # Create two threads as follows
 
@@ -113,8 +113,8 @@ def navigation(request, socket, context, message):
             print 'entro en condicion'
             try:
 
-               thread.start_new_thread( print_time, ("Thread-1", 2, socket) )
-               thread.start_new_thread( print_time, ("Thread-2", 4,socket ) )
+               thread.start_new_thread(print_time, ("Thread-1", 2, socket))
+               thread.start_new_thread(print_time, ("Thread-2", 4, socket))
 
             except:
                 print "Unexpected error blublu:", sys.exc_info()[0]
@@ -140,15 +140,15 @@ def navigation(request, socket, context, message):
                         gpsData = _gps.update()
                         dist = distance_to(gpsData, point)
 
-                        print str(point) +'   '+ str(dist)
+                        print str(point) + '   ' + str(dist)
                         
                         try:
-                            route = {"action": "do_route", "gpsData": gpsData,"nextPoin": point, 'distance_to': dist}
+                            route = {"action": "do_route", "gpsData": gpsData, "nextPoin": point, 'distance_to': dist}
                             socket.send(route)
                         except:
                             print "Unexpected error do_route:", sys.exc_info()[0]
 
-                        #socket.send({"action": "dox_route", "gpsData": gpsData,"nextPoin": point, 'distance_to': dist})
+                        # socket.send({"action": "dox_route", "gpsData": gpsData,"nextPoin": point, 'distance_to': dist})
                         print ' -z'
 
                         if dist < 100:
@@ -161,35 +161,35 @@ def navigation(request, socket, context, message):
             print "Ruta Terminada"
 
         elif message['action'] == 'get_route':
-            #print "get_route"
+            # print "get_route"
             route = {};
             rout = Route.objects.get(id=message['route_id']);
             coords = Route.get_only_coord(rout);
-            route = {'action':'route','series': {"label": rout.name, "data":coords}}
+            route = {'action':'route', 'series': {"label": rout.name, "data":coords}}
             socket.send(route)
 
         elif message['action'] == 'get_routes':
             routes = Route.objects.all();
             print routes;
-            routeslist=[]
+            routeslist = []
             for route in routes:
-                routeinfo=[]
+                routeinfo = []
                 routeinfo.append(route.name)
                 routeinfo.append(route.id)
                 routeslist.append(routeinfo)
             print "AQUIIIIIIIII"
             print routeslist
-            route2 = {'action':'aroutes','info': routeslist}
+            route2 = {'action':'aroutes', 'info': routeslist}
             socket.send(route2)
 
         elif message['action'] == 'get_gps_data':
             try:
                 gpsData = _gps.update()
-                gpsInfo = {'action':'gpsInfo','gpsData': gpsData}
+                gpsInfo = {'action':'gpsInfo', 'gpsData': gpsData}
             except:
                 print "Unexpected error get_gps_data ->:", sys.exc_info()[0]
 
-                gpsInfo = {'action':'gpsInfo','gpsData': ''}
+                gpsInfo = {'action':'gpsInfo', 'gpsData': ''}
 
 
             socket.send(gpsInfo)
@@ -197,9 +197,9 @@ def navigation(request, socket, context, message):
     except:
         print "Unexpected error: -z-", sys.exc_info()[0]
 
-def evalue_wa(ws,ad):
+def evalue_wa(ws, ad):
     if ws > 120:
-        ws =120
+        ws = 120
     elif ws < 60:
         ws = 60
     
@@ -214,19 +214,19 @@ def evalue_wa(ws,ad):
 def message(request, socket, context, message):
 
     print "manual_control"
-    #print var.gps.Update()
+    # print var.gps.Update()
     print message
     print context
 
     try:
-        if message['action']=='w':
-            var.ws_value+=inc
+        if message['action'] == 'w':
+            var.ws_value += inc
         elif message['action'] == 's':
-            var.ws_value-=inc
+            var.ws_value -= inc
         elif message['action'] == 'd':
-            var.ad_value-=inc
+            var.ad_value -= inc
         elif message['action'] == 'a':
-            var.ad_value+=inc
+            var.ad_value += inc
         elif message['action'] == 'q':
             var.ad_value = 90;
             var.ws_value = 90;
@@ -236,11 +236,11 @@ def message(request, socket, context, message):
             
         var.ws_value, var.ad_value = evalue_wa(var.ws_value, var.ad_value)
 
-        #to_brodcast = {'action':'coord_inLine','series': {"label": "inLine", "data":[[var.ad_value, var.ws_value]]}}
-        to_channel = {'action':'update','ws': var.ws_value,'ad':var.ad_value};
+        # to_brodcast = {'action':'coord_inLine','series': {"label": "inLine", "data":[[var.ad_value, var.ws_value]]}}
+        to_channel = {'action':'update', 'ws': var.ws_value, 'ad':var.ad_value};
 
-        #socket.broadcast_channel({"action": "message", "message":"manual_control"}, 'logger')
-        #socket.broadcast_channel(to_brodcast, 'navigation')
+        # socket.broadcast_channel({"action": "message", "message":"manual_control"}, 'logger')
+        # socket.broadcast_channel(to_brodcast, 'navigation')
         socket.send_and_broadcast_channel(to_channel)
     except:
         print "Unexpected error:", sys.exc_info()[0]
@@ -252,7 +252,7 @@ def message(request, socket, context, message):
 
 from math import *
 
-#http://www.todopic.com.ar/foros/index.php?PHPSESSID=nvmismbs6oqmqvaf47euhib115&topic=26373.msg216172#msg216172
+# http://www.todopic.com.ar/foros/index.php?PHPSESSID=nvmismbs6oqmqvaf47euhib115&topic=26373.msg216172#msg216172
 def distance_to(point, to_point):
     try:
         lat1 = radians(float(point['lat']))
@@ -263,8 +263,8 @@ def distance_to(point, to_point):
 
         d = (acos(sin(lat1) * sin(lat2) \
               + cos(lat1) * cos(lat2) \
-              * cos(lon1 - lon2)) * (6372797.560856 + 640)*100 )
-        return d # ESTA EN CM
+              * cos(lon1 - lon2)) * (6372797.560856 + 640) * 100)
+        return d  # ESTA EN CM
     except:
         print "Unexpected error: distance_to: ", sys.exc_info()[0]
     
@@ -276,12 +276,12 @@ def heading_to(point, to_point):
         lat2 = radians(float(to_point['lat']))
         lon2 = radians(float(to_point['lon']))
         
-        y = sin(lon2-lon1) * cos(lat2)
+        y = sin(lon2 - lon1) * cos(lat2)
         x = cos(lat1) * sin(lat2) \
           - sin(lat1) * cos(lat2) \
-          * cos(lon2-lon1)
+          * cos(lon2 - lon1)
         
-        return (((degrees(atan2(y, x))+360-180) % 360))
+        return (((degrees(atan2(y, x)) + 360 - 180) % 360))
     except:
         return -1
 
@@ -289,19 +289,19 @@ def get_angle_diff(track, heading_to):
     Total = float(heading_to) - (track)
     
     if Total > 180.0:
-        Total = - (360 - Total)
+        Total = -(360 - Total)
     elif Total < -180.0:
         Total = 360 + Total
     return Total
 
 def angle_to_turn_angle(angle):
-    #ajustar angulo a partir del cual se hace maximo giro
-    #valores negativos hacia la izquierda, valores < 90
-    #valores positivos hacia la derecha, valores > 90
-    if angle>90:
-        turn_angle=120;
-    elif angle<-90:
-        turn_angle=60;
+    # ajustar angulo a partir del cual se hace maximo giro
+    # valores negativos hacia la izquierda, valores < 90
+    # valores positivos hacia la derecha, valores > 90
+    if angle > 90:
+        turn_angle = 120;
+    elif angle < -90:
+        turn_angle = 60;
     else:
-        turn_angle=angle/3+90
+        turn_angle = angle / 3 + 90
     return int(turn_angle)
