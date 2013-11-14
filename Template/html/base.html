@@ -3,13 +3,14 @@
 <head>
 
     <meta charset="utf-8">
-    <title>{% block title %}R-PI on 4x4{% endblock %}</title>
+    <title>urjcW4x4R-PI</title>
     
 
-    {% block extra_css %}{% endblock %}
+   
 
-    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 
+    <link rel="stylesheet" href="/pure-min.css">
+    <script src="/jquery-latest.min.js"></script>
    
     {% block extra_js %}
     {% endblock %}
@@ -17,10 +18,20 @@
 </head>
 
 <body>
-    <div id="main">
-        {% block main %}{% endblock %}
-    </div>
+<div class="pure-menu pure-menu-open pure-menu-horizontal">
+    <a href="#" class="pure-menu-heading">urjcW4x4R-Pi</a>
+
+    <ul>
+        <li class="pure-menu-selected"><a href="/index">Home</a></li>
+        <li><a href="/navigation">Navegación</a></li>
+        <li><a href="/controlVehicle">Control del Vehiculo</a></li>
+        <li><a href="/log">Log</a></li>
+        <li><a href="#">Ayuda</a></li>
+    </ul>
+</div>
+
 
     {% block form %}{% endblock %}
 
 </body>
+
