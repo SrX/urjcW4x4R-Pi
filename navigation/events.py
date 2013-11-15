@@ -4,6 +4,9 @@ from django_socketio import broadcast_channel
 
 from navigation.models import Route, Coord;
 
+from navigation import _gps
+
+
 import sys
 import gps
 import time
@@ -152,7 +155,7 @@ def navigation(request, socket, context, message):
                 gpsInfo = {'action':'gpsInfo', 'gpsData': gpsData}
             except:
                 print "Unexpected error get_gps_data ->:", sys.exc_info()[0]
-
+                raise
                 gpsInfo = {'action':'gpsInfo', 'gpsData': ''}
 
 

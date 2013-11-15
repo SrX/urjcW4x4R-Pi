@@ -3,11 +3,6 @@ import sys
 import serial
 import time
 
-# ?? Para que es
-nroute = 1
-
-
-
 
 
 class Control(object):
@@ -29,7 +24,9 @@ class Control(object):
         
         
     def reset(self):
-        self.set(90, 90)
+        self.ws_value = 90
+        self.ad_value = 90
+        self.set(self.ws_value, self.ad_value)
         
     def action(self, action):
         if action == 'w':
@@ -47,7 +44,8 @@ class Control(object):
         
         self.evalue_wa()
         self.set(self.ws_value, self.ad_value)
-        #devolver el valor, el que se va pasar al coche
+        
+        #devolver el valor, el que se ha pasado al coche
         return self.ws_value, self.ad_value
             
     def set(self, speed, angle):
@@ -80,8 +78,6 @@ class Control(object):
             self.ad_value = 120
         elif self.ad_value < 60:
             self.ad_value = 60
-
-
 
 
 vehicle = Control();

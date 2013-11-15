@@ -65,7 +65,7 @@ $(document).ready(function() {
                 action: move
             });
         };
-        setTimeout(SendInputKey, 50);
+        setTimeout(SendInputKey, 70);
     };
 
 

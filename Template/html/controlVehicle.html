@@ -19,24 +19,21 @@
 
 {% block main %}
 <div class="controls">
-	<table class="pure-table">
-		<thead>
+	<table id="controltable" class="pure-table">
+	<thead>
 			<tr>
 				<th>Velocidad</th>
+				<th></th>
 				<th>Giro</th>
 			</tr>
 		</thead>
-
 		<tbody>
 			<tr class="pure-table-odd">
 				<td><div id="velocidad">90</div></td>
+				<td></td>
 				<td><div id="giro">90</div></td>
 			</tr>
-		</tbody>
-	</table>
-
-	<table class="pure-table">
-		<tbody>
+			
 			<tr>
 				<td></td>
 				<td><button id="w" class="pure-button pure-button-success">W</button></td>
@@ -57,23 +54,6 @@
 		</tbody>
 	</table>
 </div>
-
-<div class="botones">
-	<div id="w" class="button">Adelante</div>
-	<div id="a" class="button">Izquierda</div>
-	<div id="d" class="button">Derecha</div>
-	<div id="s" class="button">Atras</div>
-	<div id="stop" class="button">STOP</div>
-	<div id="startroute" class="button">Grabar ruta</div>
-	<div id="stoproute" class="button">Parar ruta</div>
-</div>
-
-<p>Velocidad: 
-<div id="velocidad">90</div>
-</p>
-<p>Velocidad:
-<div id="giro">90</div>
-</p>
 
 
 {% endblock %}

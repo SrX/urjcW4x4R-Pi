@@ -1,38 +1,32 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block extra_js %} {% load socketio_tags %}
+{% socketio %}
 
-{% block extra_js %}
+<script src="/static/highcharts.js"></script>
+<script src="/static/exporting.js"></script>
+<script src="/static/navigation.js"></script>
 
-	{% load socketio_tags %}
-	{% socketio %}
 
-	<script src="/static/highcharts.js"></script>
-	<script src="/static/exporting.js"></script>
-	<script src="/static/navigation.js"></script>
-	
-	<link href="/static/navigation.css" rel="stylesheet" type="text/css">
-	
-	<script language="javascript" type="text/javascript" src="/static/jquery.flot.js"></script>
-	<script language="javascript" type="text/javascript" src="/static/jquery.flot.navigate.js"></script>
-{% endblock %}
+<script language="javascript" type="text/javascript"
+	src="/static/jquery.flot.js"></script>
+<script language="javascript" type="text/javascript"
+	src="/static/jquery.flot.navigate.js"></script>
+{% endblock %} {% block main %}
 
-{% block main %}
 
-	<div id="header">
-		<h2>El mapa de navegacion!</h2>
-	</div>
 
-<div id="do_route">
-	Hacer la ruta
-
-</div>	
-
-<div id="content">
+<div class="navigation">
 	<div class="demo-container">
-		<div id="navi_map" class="demo-placeholder" style="float:left; width:875px;"></div>
-		<p id="choices" style="float:right; width:135px;"></p>
-		<div id="rutas"><div id="switchrutas">Lista de rutas</div><div id="listarutas"</div></div>
-	</div>
-</div>
+		<div id="navi_map" class="map_placeholder"></div>
+		<div class="map_options">
+			<button  id="do_route" class="pure-button pure-button-primary">Empezar ruta</button>
+			<div id="rutas">
+				<div id="switchrutas">Lista de rutas</div>
+				<div id="listarutas"</div>
+			</div>
 
+		</div>
+	</div>
+
+</div>
 
 {% endblock %}
