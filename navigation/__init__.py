@@ -108,19 +108,23 @@ class RouteThread(threading.Thread):
             raise
         print 'BzZzzzzzzzzzzZzzzZZzzz'
          
-        rout = Route.objects.get(id=route_id);
-        coords = Route.get_only_coord(rout);
-        for point in coords:
-            print 'do_route'
-            reached = False;
-            while not reached and not self.stopped():
-                gpsData = _gps.update()
-                dist = distance_to(gpsData, point)
-    
-                print str(gpsData['lat']) +' '+ str(gpsData['lon']) + ') <-gps '+ str(point) + '<-point   d->' + str(dist)
 
-                # socket.send({"action": "dox_route", "gpsData": gpsData,"nextPoin": point, 'distance_to': dist})
-                print ' -z- '
-                
-                if dist < 100:
-                    reached = True
+        try:
+            rout = Route.objects.get(id=route_id);
+            coords = Route.get_only_coord(rout);
+            for point in coords:
+                print 'do_route'
+                reached = False;
+                while not reached and not self.stopped():
+                    gpsData = _gps.update()
+                    dist = distance_to(gpsData, point)
+        
+                    print str(gpsData['lat']) +' '+ str(gpsData['lon']) + ') <-gps '+ str(point) + '<-point   d->' + str(dist)
+    
+                    # socket.send({"action": "dox_route", "gpsData": gpsData,"nextPoin": point, 'distance_to': dist})
+                    print ' -z- '
+                    
+                    if dist < 100:
+                        reached = True
+        except:
+            raise

@@ -2,8 +2,9 @@ import gps
 import sys
 import serial
 import time
-
-
+import threading
+from navigation.models import Route, Coord;
+from navigation import _gps;
 
 class Control(object):
     def __init__ (self):
@@ -79,11 +80,39 @@ class Control(object):
         elif self.ad_value < 60:
             self.ad_value = 60
 
+class RecordThread(threading.Thread):
+    """Thread class with a stop() method. The thread itself has to check
+    regularly for the stopped() condition."""
 
-vehicle = Control();
+    def __init__(self):
+        super(RecordThread, self).__init__()
+        self._stop = threading.Event()
 
+    def run(self):
+        intervalo = 2;
+        nameroute = "Ruta BUENISIMA"
+        i=0;
+        try:
+            rout = Route.objects.create(name=nameroute)
+            print "Guardando en base de datos nueva ruta.."
+            while not self.stopped():
+                i+=1
+                cp = _gps.update();
+                if (i % intervalo) == 0 and float(cp['lon']) != 0.0:
+                    print 'punto guardado'
+                    cor = Coord.objects.create(route=rout, lat=float(cp['lat']), lon=float(cp['lon']), track=float(cp['track']), speed=float(cp['speed']), time=cp['time']);
+        except:
+            raise
 
+    def stop(self):
+        self._stop.set()
 
+    def stopped(self):
+        return self._stop.isSet()
 
+class Rec(object):
+    def __init__ (self):
+        self.recording = 0
 
-
+vehicle = Control()
+rec = Rec()

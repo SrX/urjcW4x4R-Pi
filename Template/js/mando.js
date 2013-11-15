@@ -42,17 +42,11 @@ $(document).ready(function() {
        socket.send({action: 'q'});
     });
     $("#startroute").click(function () {
-        console.log("HOLA");
         socket.send({action: 'startroute'});
-        if ($("#stoproute").is(":hidden")) {
-            $("#stoproute").slideDown("slow");
-        }
     });
      $("#stoproute").click(function () {
-       console.log("algo");
-       $("#stoproute").hide("slow")
+        socket.send({action: 'stoproute'});
     });   
-    $("#stoproute").hide();
 
 
     SendInputKey = function() {
@@ -82,19 +76,43 @@ $(document).ready(function() {
     var messaged = function(data) {
         console.log("messaged_data");
         switch (data.action) {
+            case 'init':
+                $("#velocidad").html(data.ws)
+                $("#giro").html(data.ad)
+                if (data.recording=='1'){
+                    if ($("#stoproute").is(":hidden")) {
+                        $("#stoproute").show();
+                    }
+                    $("#startroute").removeClass('pure-button pure-button-success');
+                    $("#startroute").addClass('pure-button pure-button-disabled');                    
+                }
+                break
             case 'update':
                 $("#velocidad").html(data.ws)
                 $("#giro").html(data.ad)
-                break;
+                break
+            case 'startedroute':
+                if ($("#stoproute").is(":hidden")) {
+                    $("#stoproute").show();
+                }
+                $("#startroute").removeClass('pure-button pure-button-success');
+                $("#startroute").addClass('pure-button pure-button-disabled');
+                break
+            case 'stoppedroute':
+                $("#startroute").removeClass('pure-button pure-button-disabled');
+                $("#startroute").addClass('pure-button pure-button-success');
+                $("#stoproute").hide("fast");
+                break
         }
     };
 
+    $("#stoproute").hide();
 
     var connected = function() {
         console.log("connected");
         socket.subscribe('hand_control');
         socket.send({
-            action: 'update'
+            action: 'init'
         });
     };
 
