@@ -23,35 +23,6 @@ def do_route(rid):
     coords = Route.get_only_coord(rout);
 
 
-# coords.append([o.lat, o.lon])
-# def distance_to(point, to_point):
-
-# def do_route(rid,socket):
-#     socket.broadcast_channel({"action": "do_route", "started": 'yes'}, 'navigation')
-
-#     print 'do_route'
-#     rout = Route.objects.get(id=4);
-#     coords = Route.get_only_coord(rout);
-
-#     for point in coords:
-        
-#         reached = False;
-#         while not reached:
-#             gpsData = _gps.update()
-#             dist = distance_to(gpsData, point)
-#             print str(point) + str(dist)
-#             socket.send_and_broadcast_channel({"action": "do_route", "gpsData": gpsData,"nextPoin": point,
-#                                      'distance_to': dist})
-
-#             if dist < 100:
-#                 reached = True
-
-#     socket.broadcast_channel({"action": "do_route", "finish": 'yes'}, 'navigation')
-
-#     print "Ruta Terminada"
-#     #print coords
-#     pass
-
 
 
 import thread
@@ -180,3 +151,35 @@ def navigation(request, socket, context, message):
 #         k+=1;
 #         cor = Coord.objects.create(route=rout,lat=float(pp[0]),lon=float(pp[1]),speed=float(pp[2]),track=float(pp[3]),time=pp[4]);
 #         #return [lat, lon,speed,time,track]
+
+
+# coords.append([o.lat, o.lon])
+# def distance_to(point, to_point):
+
+# def do_route(rid,socket):
+#     socket.broadcast_channel({"action": "do_route", "started": 'yes'}, 'navigation')
+
+#     print 'do_route'
+#     rout = Route.objects.get(id=4);
+#     coords = Route.get_only_coord(rout);
+
+#     for point in coords:
+        
+#         reached = False;
+#         while not reached:
+#             gpsData = _gps.update()
+#             dist = distance_to(gpsData, point)
+#             print str(point) + str(dist)
+#             socket.send_and_broadcast_channel({"action": "do_route", "gpsData": gpsData,"nextPoin": point,
+#                                      'distance_to': dist})
+
+#             if dist < 100:
+#                 reached = True
+
+#     socket.broadcast_channel({"action": "do_route", "finish": 'yes'}, 'navigation')
+
+#     print "Ruta Terminada"
+#     #print coords
+#     pass
+
+
