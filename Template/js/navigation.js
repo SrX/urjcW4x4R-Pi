@@ -167,6 +167,11 @@ $(function() {
 		socket.send({
 			action : 'get_routes'
 		});
+
+		socket.send({
+			action : 'blublu'
+		});
+
 	};
 
 	var disconnected = function() {
