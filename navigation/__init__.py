@@ -125,3 +125,5 @@ class RouteThread(threading.Thread):
         
                     if dist < 100:
                         reached = True
+        except:
+            raise

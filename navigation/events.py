@@ -14,15 +14,11 @@ import threading
 
 import sys
 
-
 def do_route(rid):
     print 'do_route'
     rout = Route.objects.get(id=4);
     coords = Route.get_only_coord(rout);
     
-
-import time
-
 @events.on_message(channel="navigation")
 def navigation(request, socket, context, message):
     print 'chan chan chan'
