@@ -6,9 +6,6 @@ from navigation.models import Route, Coord;
 
 from navigation import _gps
 
-
-import sys
-import gps
 import time
 
 import threading
@@ -65,6 +62,7 @@ def navigation(request, socket, context, message):
                 socket.send({"action": "xdo_route", "started": 'yes'})
             except:
                 print "Unexpected error do_route:", sys.exc_info()[0]
+                raise
 
 
             try:
@@ -96,6 +94,7 @@ def navigation(request, socket, context, message):
                 socket.send({"action": "xdo_route", "finish": 'yes'})
             except:
                 print "Unexpected error do_route after:", sys.exc_info()[0]
+                raise
             print 'do_route'
             print "Ruta Terminada"
 
