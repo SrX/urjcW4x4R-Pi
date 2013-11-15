@@ -10,7 +10,7 @@ import time
 
 import threading
 
-
+import sys
 
 
 
@@ -49,11 +49,29 @@ def navigation(request, socket, context, message):
             print 'entro en condicion'
             try:
 
-               thread.start_new_thread(print_time, ("Thread-1", 2, socket))
-               thread.start_new_thread(print_time, ("Thread-2", 4, socket))
+                class Looping(object):
+                
+                    def __init__(self):
+                     self.isRunning = True
+                
+                    def runForever(self):
+                       while self.isRunning == True:
+                           time.sleep(1)
+                           print 'tururu'
+                           "do stuff here"
+                
+                l = Looping()
+                t = threading.Thread(target = l.runForever)
+                t.start()
+                time.sleep(4)
+                l.isRunning = False
+               
+               #thread.start_new_thread(print_time, ("Thread-1", 2, socket))
+                thread.start_new_thread(print_time, ("Thread-2", 4, socket))
 
             except:
                 print "Unexpected error blublu:", sys.exc_info()[0]
+                raise
             print 'saldo de condicion'
 
         elif message['action'] == 'do_route':
@@ -118,19 +136,6 @@ def navigation(request, socket, context, message):
             print "AQUIIIIIIIII"
             route2 = {'action':'get_routes', 'info': routeslist}
             socket.send(route2)
-
-#         elif message['action'] == 'get_gps_data':
-#             try:
-#                 gpsData = _gps.update()
-#                 gpsInfo = {'action':'gpsInfo', 'gpsData': gpsData}
-#             except:
-#                 print "Unexpected error get_gps_data ->:", sys.exc_info()[0]
-#                 raise
-#                 gpsInfo = {'action':'gpsInfo', 'gpsData': ''}
-
-
-                #socket.send(gpsInfo)
-
     except:
         raise
         
