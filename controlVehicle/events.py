@@ -15,6 +15,8 @@ def from_gps_to_bdd():
         rout = Route.objects.create(name=nameroute);
         print "Guardando en base de datos nueva ruta.."
         for i in range(1, 400):
+            if stop_grabado == 1:
+                threading.exit();
             cp = _gps.update();
             if (i % intervalo) == 0 and float(cp['lon']) != 0.0:
                 cor = Coord.objects.create(route=rout, lat=float(cp['lat']), lon=float(cp['lon']), track=float(cp['track']), speed=float(cp['speed']), time=cp['time']);

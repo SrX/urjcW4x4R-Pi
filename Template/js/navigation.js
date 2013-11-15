@@ -152,8 +152,6 @@ $(function() {
 			action : 'get_routes'
 		});
 
-		//get_gps_data();
-
 		socket.send({
 			action : 'blublu'
 		});
