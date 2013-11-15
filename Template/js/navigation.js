@@ -154,10 +154,6 @@ $(function() {
 		});
 
 		get_gps_data();
-
-		socket.send({
-			action : 'blublu'
-		});
 	};
 
 	var get_gps_data = function() {

@@ -2,35 +2,14 @@ from django_socketio import events
 from django_socketio import broadcast_channel
 
 from controlVehicle import *
-
-
 from navigation.models import Route, Coord;
-
+from navigation import _gps;
 import time
+import threading
 
-
-
-@events.on_message(channel="hand_control")
-def message(request, socket, context, message):
-    print "manual_control"
-    try:
-        if message['action'] == 'startroute':
-            from_gps_to_bdd(intervalo);
-        else:
-            ws_value, ad_value = vehicle.action(message['action'])
-            ret = {'action':'update', 'ws': ws_value, 'ad':ad_value};
-            
-            socket.send_and_broadcast_channel(ret)
-    except:
-        raise
-    
-
-
-
-
-def from_gps_to_bdd(intervalo):
-    intervalo = 5;
-    nameroute = "Ruta 1 de cada 5"
+def from_gps_to_bdd():
+    intervalo = 8;
+    nameroute = "Ruta prueba"
     try:
         # rout = Route.objects.create(name="Route " + str(var.nroute));
         rout = Route.objects.create(name=nameroute);
@@ -44,5 +23,18 @@ def from_gps_to_bdd(intervalo):
     except:
         raise
 
-
-
+@events.on_message(channel="hand_control")
+def message(request, socket, context, message):
+    print "manual_control"
+    try:
+        if message['action'] == 'startroute':
+            print "EMPIEZO GRABADO"
+            t = threading.Thread(target=from_gps_to_bdd)
+            t.start()
+        else:
+            ws_value, ad_value = vehicle.action(message['action'])
+            ret = {'action':'update', 'ws': ws_value, 'ad':ad_value};
+            
+            socket.send_and_broadcast_channel(ret)
+    except:
+        raise

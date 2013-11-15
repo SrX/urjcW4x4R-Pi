@@ -34,9 +34,9 @@ class Control(object):
         elif action == 's':
             self.ws_value -= self.inc
         elif action == 'd':
-            self.ad_value -= self.inc
-        elif action == 'a':
             self.ad_value += self.inc
+        elif action == 'a':
+            self.ad_value -= self.inc
         else:  # action == 'q':
             # por medidas de seguridad, si el coche se escapa 
             # y/o el piloto se pone nervioso

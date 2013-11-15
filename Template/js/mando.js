@@ -42,8 +42,17 @@ $(document).ready(function() {
        socket.send({action: 'q'});
     });
     $("#startroute").click(function () {
+        console.log("HOLA");
         socket.send({action: 'startroute'});
+        if ($("#stoproute").is(":hidden")) {
+            $("#stoproute").slideDown("slow");
+        }
     });
+     $("#stoproute").click(function () {
+       console.log("algo");
+       $("#stoproute").hide("slow")
+    });   
+    $("#stoproute").hide();
 
 
     SendInputKey = function() {
