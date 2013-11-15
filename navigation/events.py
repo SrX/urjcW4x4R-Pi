@@ -149,17 +149,17 @@ def navigation(request, socket, context, message):
             route2 = {'action':'get_routes', 'info': routeslist}
             socket.send(route2)
 
-        elif message['action'] == 'get_gps_data':
-            try:
-                gpsData = _gps.update()
-                gpsInfo = {'action':'gpsInfo', 'gpsData': gpsData}
-            except:
-                print "Unexpected error get_gps_data ->:", sys.exc_info()[0]
-                raise
-                gpsInfo = {'action':'gpsInfo', 'gpsData': ''}
+#         elif message['action'] == 'get_gps_data':
+#             try:
+#                 gpsData = _gps.update()
+#                 gpsInfo = {'action':'gpsInfo', 'gpsData': gpsData}
+#             except:
+#                 print "Unexpected error get_gps_data ->:", sys.exc_info()[0]
+#                 raise
+#                 gpsInfo = {'action':'gpsInfo', 'gpsData': ''}
 
 
-            socket.send(gpsInfo)
+                #socket.send(gpsInfo)
 
     except:
         raise

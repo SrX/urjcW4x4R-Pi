@@ -22,11 +22,11 @@ class StartGps(object):
             print "Unexpected error: StartGps: ", sys.exc_info()[0]
             pass    
         except AttributeError:  # Hay que decidir que hacer si se produce un error.
-            return      {'lat' :   -1,
-                        'lon'   :   -1,
-                        'track' :   -1,
-                        'speed' :   -1,
-                        'time'  :   -1,  # le pasa algo raro
+            return      {'lat' :   0,
+                        'lon'   :   0,
+                        'track' :   0,
+                        'speed' :   0,
+                        'time'  :   0,  # le pasa algo raro
                         # 'date'     :   self._gps.fix.date,
                         # 'alt'  :   self._gps.fix.altitude,
                         }
@@ -42,3 +42,30 @@ class StartGps(object):
 
 
 _gps = StartGps();
+
+
+
+from django_socketio import broadcast_channel
+from django_socketio import NoSocket
+
+import threading
+
+import logging
+import time
+
+class BrodcastThread(threading.Thread):
+    def run(self):
+        time.sleep(5);
+        while True:
+            time.sleep(1);
+            gpsInfo = _gps.update()
+            try:
+                broadcast_channel({'action':'gpsInfo', 'gpsData': gpsInfo}, 'navigation')
+            except NoSocket:
+                time.sleep(5);
+            
+
+
+bth = BrodcastThread()
+bth.setDaemon(True)
+bth.start()

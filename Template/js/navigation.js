@@ -93,7 +93,6 @@ $(function() {
 			break;
 
 		case 'gpsInfo':
-			console.log(rxdata.gpsData);
 			if (rxdata.gpsData != '') {
 				var series = {
 					label : 'GPS',
@@ -153,20 +152,11 @@ $(function() {
 			action : 'get_routes'
 		});
 
-		get_gps_data();
 
 		socket.send({
 			action : 'blublu'
 		});
 	};
-
-	var get_gps_data = function() {
-		socket.send({
-			action : 'get_gps_data'
-		});
-		setTimeout(get_gps_data, 500);
-
-	}
 
 	var disconnected = function() {
 		console.log("disconnected");
