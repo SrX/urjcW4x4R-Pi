@@ -5,6 +5,8 @@ from django_socketio import broadcast_channel
 from navigation.models import Route, Coord;
 
 from navigation import _gps
+from navigation import _thrd
+from navigation import RouteThread
 
 import time
 
@@ -13,108 +15,28 @@ import threading
 import sys
 
 
-
 def do_route(rid):
     print 'do_route'
     rout = Route.objects.get(id=4);
     coords = Route.get_only_coord(rout);
+    
 
-
-
-
-import thread
 import time
-
-
-
-# Define a function for the thread
-def print_time(threadName, delay, socket):
-   count = 0
-   while count < 5:
-    time.sleep(delay)
-    count += 1
-    route = {'action':threadName}
-    socket.send(route)
-    print "%s: %s" % (threadName, time.ctime(time.time()))
-
-# Create two threads as follows
-
-
 
 @events.on_message(channel="navigation")
 def navigation(request, socket, context, message):
     print 'chan chan chan'
     try:
-        if message['action'] == 'blublu':
-            print 'entro en condicion'
-            try:
-
-                class Looping(object):
+        if message['action'] == 'startRoute':
+            if not _thrd.has_key('RouteThread'):
+                _thrd['RouteThread'] = RouteThread()
+                _thrd['RouteThread'].setDaemon(True)
+                _thrd['RouteThread'].start()
                 
-                    def __init__(self):
-                     self.isRunning = True
-                
-                    def runForever(self):
-                       while self.isRunning == True:
-                           time.sleep(1)
-                           print 'tururu'
-                           "do stuff here"
-                
-                l = Looping()
-                t = threading.Thread(target = l.runForever)
-                t.start()
-                time.sleep(4)
-                l.isRunning = False
-               
-               #thread.start_new_thread(print_time, ("Thread-1", 2, socket))
-                thread.start_new_thread(print_time, ("Thread-2", 4, socket))
-
-            except:
-                print "Unexpected error blublu:", sys.exc_info()[0]
-                raise
-            print 'saldo de condicion'
-
-        elif message['action'] == 'do_route':
-
-            try:
-                socket.send({"action": "xdo_route", "started": 'yes'})
-            except:
-                print "Unexpected error do_route:", sys.exc_info()[0]
-                raise
-
-
-            try:
-                rout = {}
-                rout = Route.objects.get(name="Track95");
-                coords = Route.get_only_coord(rout);
-                coords = coords[1:10]
-                for point in coords:
-                    print 'do_route'
-                    reached = False;
-                    while not reached:
-                        gpsData = _gps.update()
-                        dist = distance_to(gpsData, point)
-
-                        print str(point) + '   ' + str(dist)
-                        
-                        try:
-                            route = {"action": "do_route", "gpsData": gpsData, "nextPoin": point, 'distance_to': dist}
-                            socket.send(route)
-                        except:
-                            print "Unexpected error do_route:", sys.exc_info()[0]
-
-                        # socket.send({"action": "dox_route", "gpsData": gpsData,"nextPoin": point, 'distance_to': dist})
-                        print ' -z'
-
-                        if dist < 100:
-                            reached = True
-
-                socket.send({"action": "xdo_route", "finish": 'yes'})
-            except:
-                print "Unexpected error do_route after:", sys.exc_info()[0]
-                raise
-            print 'do_route'
-            print "Ruta Terminada"
+        elif message['action'] == 'stopRoute':
+                print _thrd
+                _thrd['RouteThread'].stop()
+                del _thrd['RouteThread']
 
         elif message['action'] == 'get_route':
             # print "get_route"

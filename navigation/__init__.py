@@ -74,3 +74,58 @@ class BrodcastThread(threading.Thread):
 bth = BrodcastThread()
 bth.setDaemon(True)
 bth.start()
+
+
+
+#thread.start_new_thread(print_time, ("Thread-1", 2, socket))
+
+
+class RouteThread(threading.Thread):
+
+    def __init__(self):
+        super(RouteThread, self).__init__()
+        self._stop = threading.Event()
+
+    def stop(self):
+        self._stop.set()
+
+    def stopped(self):
+        return self._stop.isSet()
+    
+    def run(self):
+        time.sleep(5);
+        while not self.stopped():
+            try:
+                broadcast_channel({'action':'startRoute -AA'}, 'navigation')
+                time.sleep(1);
+            except NoSocket:
+                time.sleep(5);
+            except:
+                raise
+            print 'BzZzzzzzzzzzzZzzzZZzzz'
+            
+#             try:
+#                 rout = {}
+#                 rout = Route.objects.get(name="Track95");
+#                 coords = Route.get_only_coord(rout);
+#                 coords = coords[1:10]
+#                 for point in coords:
+#                     print 'do_route'
+#                     reached = False;
+#                     while not reached:
+#                         gpsData = _gps.update()
+#                         dist = distance_to(gpsData, point)
+# 
+#                         print str(point) + '   ' + str(dist)
+#                         
+#                         try:
+#                             route = {"action": "do_route", "gpsData": gpsData, "nextPoin": point, 'distance_to': dist}
+#                             socket.send(route)
+#                         except:
+#                             print "Unexpected error do_route:", sys.exc_info()[0]
+# 
+#                         # socket.send({"action": "dox_route", "gpsData": gpsData,"nextPoin": point, 'distance_to': dist})
+#                         print ' -z'
+# 
+#                         if dist < 100:
+#                             reached = True
