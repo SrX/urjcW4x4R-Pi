@@ -62,7 +62,7 @@ class BrodcastThread(threading.Thread):
     def run(self):
         time.sleep(5);
         while True:
-            time.sleep(1);
+            time.sleep(0.01);
             gpsInfo = _gps.update()
             try:
                 broadcast_channel({'action':'gpsInfo', 'gpsData': gpsInfo}, 'navigation')
@@ -77,13 +77,14 @@ bth.start()
 
 
 
-#thread.start_new_thread(print_time, ("Thread-1", 2, socket))
+# thread.start_new_thread(print_time, ("Thread-1", 2, socket))
 
 
 class RouteThread(threading.Thread):
 
-    def __init__(self):
+    def __init__(self, route_id):
         super(RouteThread, self).__init__()
+        self.route_id = route_id
         self._stop = threading.Event()
 
     def stop(self):
@@ -93,39 +94,34 @@ class RouteThread(threading.Thread):
         return self._stop.isSet()
     
     def run(self):
+        route_id = self.route_id;
+        print route_id
         time.sleep(5);
-        while not self.stopped():
-            try:
-                broadcast_channel({'action':'startRoute -AA'}, 'navigation')
-                time.sleep(1);
-            except NoSocket:
-                time.sleep(5);
-            except:
-                raise
-            print 'BzZzzzzzzzzzzZzzzZZzzz'
-            
-#             try:
-#                 rout = {}
-#                 rout = Route.objects.get(name="Track95");
-#                 coords = Route.get_only_coord(rout);
-#                 coords = coords[1:10]
-#                 for point in coords:
-#                     print 'do_route'
-#                     reached = False;
-#                     while not reached:
-#                         gpsData = _gps.update()
-#                         dist = distance_to(gpsData, point)
-# 
-#                         print str(point) + '   ' + str(dist)
-#                         
-#                         try:
-#                             route = {"action": "do_route", "gpsData": gpsData, "nextPoin": point, 'distance_to': dist}
-#                             socket.send(route)
-#                         except:
-#                             print "Unexpected error do_route:", sys.exc_info()[0]
-# 
-#                         # socket.send({"action": "dox_route", "gpsData": gpsData,"nextPoin": point, 'distance_to': dist})
-#                         print ' -z'
-# 
-#                         if dist < 100:
-#                             reached = True
+        
+        try:
+            broadcast_channel({'action':'startRoute -AA'}, 'navigation')
+            time.sleep(1);
+        except NoSocket:
+            time.sleep(5);
+        except:
+            raise
+        print 'BzZzzzzzzzzzzZzzzZZzzz'
+         
+        try:
+            rout = Route.objects.get(id=rid);
+            coords = Route.get_only_coord(rout);
+            for point in coords:
+                print 'do_route'
+                reached = False;
+                while not reached and not self.stopped():
+                    gpsData = _gps.update()
+                    dist = distance_to(gpsData, point)
+        
+                    print str(point) + '   ' + str(dist)
+                     
+        
+                    # socket.send({"action": "dox_route", "gpsData": gpsData,"nextPoin": point, 'distance_to': dist})
+                    print ' -z'
+        
+                    if dist < 100:
+                        reached = True
