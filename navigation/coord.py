@@ -1,14 +1,14 @@
 
 from math import *
-
+import sys
 # http://www.todopic.com.ar/foros/index.php?PHPSESSID=nvmismbs6oqmqvaf47euhib115&topic=26373.msg216172#msg216172
 def distance_to(point, to_point):
     try:
-        lat1 = radians(float(point[0]))
-        lon1 = radians(float(point[1]))
+        lat1 = radians(float(to_point[0]))
+        lon1 = radians(float(to_point[1]))
         
-        lat2 = radians(float(to_point['lat']))
-        lon2 = radians(float(to_point['lon']))
+        lat2 = radians(float(point['lat']))
+        lon2 = radians(float(point['lon']))
         
         
 
@@ -17,16 +17,17 @@ def distance_to(point, to_point):
               * cos(lon1 - lon2)) * (6372797.560856 + 640) * 100)
         return d  # ESTA EN CM
     except:
+        print "Unexpected error:", sys.exc_info()[0]
         return -1
     
     
 def heading_to(point, to_point):
     try:
-        lat1 = radians(float(point[0]))
-        lon1 = radians(float(point[1]))
+        lat1 = radians(float(to_point[0]))
+        lon1 = radians(float(to_point[1]))
         
-        lat2 = radians(float(to_point['lat']))
-        lon2 = radians(float(to_point['lon']))
+        lat2 = radians(float(point['lat']))
+        lon2 = radians(float(point['lon']))
         
         y = sin(lon2 - lon1) * cos(lat2)
         x = cos(lat1) * sin(lat2) \
@@ -35,6 +36,7 @@ def heading_to(point, to_point):
         
         return (((degrees(atan2(y, x)) + 360 - 180) % 360))
     except:
+        print "Unexpected error:", sys.exc_info()[0]
         return -1
 
 def get_angle_diff(track, heading_to):
