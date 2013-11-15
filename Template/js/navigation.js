@@ -1,5 +1,5 @@
 $(function() {
-	// add zoom out button 
+	// add zoom out button
 
 	function createnode(elem, id, nameclass, html) {
 		var item = document.createElement(elem);
@@ -116,9 +116,10 @@ $(function() {
 			break;
 		case 'do_route':
 			console.log(rxdata.gpsData);
-			//console.log(data);
-			//socket.broadcast_channel({"action": "do_route", "gpsData": gpsData,
-			//"nextPoin": point, 'distance_to': dist}, 'navigation')
+			// console.log(data);
+			// socket.broadcast_channel({"action": "do_route", "gpsData":
+			// gpsData,
+			// "nextPoin": point, 'distance_to': dist}, 'navigation')
 			var upData = {
 				label : 'nextPoint',
 				data : [ rxdata.nextPoint,
@@ -151,12 +152,6 @@ $(function() {
 		socket.send({
 			action : 'get_routes'
 		});
-
-		//get_gps_data();
-
-		socket.send({
-			action : 'blublu'
-		});
 	};
 
 	var disconnected = function() {
@@ -181,5 +176,27 @@ $(function() {
 	})
 
 	start();
+
+	// HTML - CSS
+	$("#startroute").click(function() {
+		socket.send({
+			action : 'startRoute'
+		});
+
+		if ($("#stoproute").is(":hidden")) {
+			$("#stoproute").slideDown("fast");
+		}
+		$("#startroute").removeClass('pure-button pure-button-success');
+		$("#startroute").addClass('pure-button pure-button-disabled');
+	});
+	$("#stoproute").click(function() {
+		socket.send({
+			action : 'stopRoute'
+		});
+		$("#startroute").removeClass('pure-button pure-button-disabled');
+		$("#startroute").addClass('pure-button pure-button-success');
+		$("#stoproute").hide("fast")
+	});
+	$("#stoproute").hide();
 
 });
