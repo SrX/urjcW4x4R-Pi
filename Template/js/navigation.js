@@ -1,4 +1,5 @@
 $(function() {
+	var routeID = -1;
 	// add zoom out button
 
 	function createnode(elem, id, nameclass, html) {
@@ -30,118 +31,132 @@ $(function() {
 			interactive : true
 		}
 	};
-
 	var data = [];
 	var navi_map = $("#navi_map");
-
+	
 	$.plot(navi_map, data, options);
+
+
 
 	// fetch one series, adding to what we got
 	var alreadyFetched = {};
 
 	// then fetch the data with jQuery
 
-	function onDataReceived(series) {
-		console.log("onDataReceived");
+	// Optimizar de alguna manera esto
+	function loadRouteToMap(series) {
 
 		if (!alreadyFetched[series.label]) {
 			alreadyFetched[series.label] = true;
 			data.push(series);
 		} else {
-			if (series.label == 'nextPoint') {
-
-				var dl = data.length;
-				for (var i = 0; i < dl; i++) {
-					if (data[i].label == series.label) {
-						data[i] = series
-						console.log(data[i]);
-					}
-				}
-			} else {
-
-				var dl = data.length;
-				for (var i = 0; i < dl; i++) {
-					if (data[i].label == series.label) {
-						data[i].data = data[i].data.concat(series.data);
-					}
+			var dl = data.length;
+			for (var i = 0; i < dl; i++) {
+				if (data[i].label == series.label) {
+					data[i].data = series.data;
 				}
 			}
 		}
 
 		$.plot(navi_map, data, options);
-		console.log("puntos pintados");
-	}
 
-	$("#do_route").click(function() {
-		console.log('do_route');
-		socket.send({
-			action : 'do_route',
-			'route_id' : 4
-		});
-	});
+	}
+	;
+
+	function onDataReceived(series) {
+
+		if (!alreadyFetched[series.label]) {
+			alreadyFetched[series.label] = true;
+			data.push(series);
+		} else {
+			var dl = data.length;
+			for (var i = 0; i < dl; i++) {
+				if (data[i].label == series.label) {
+					data[i].data = data[i].data.concat(series.data);
+				}
+			}
+		}
+		
+		$.plot(navi_map, data, options);
+
+	}
+	;
 
 	var messaged = function(rxdata) {
 		console.log("messaged_data_navigation");
 		console.log(rxdata.action);
 		switch (rxdata.action) {
-		case 'route':
-			onDataReceived(rxdata.series);
-			break;
+		case 'loadRoute':
+			var serie = {
+				label : 'Ruta',
+				data : rxdata.route,
 
-		case 'coord_inLine':
-			onDataReceived(rxdata.series);
+				color : 7,
+
+				lines : {
+					show : false
+				},
+				points : {
+					show : true
+				},
+				clickable : true
+			};
+			loadRouteToMap(serie)
+
 			break;
 
 		case 'gpsInfo':
 			if (rxdata.gpsData != '') {
-				var series = {
+				var serie = {
 					label : 'GPS',
-					data : [ [ rxdata.gpsData.lat, rxdata.gpsData.lon ] ]
+					data : [ [ rxdata.gpsData.lat, rxdata.gpsData.lon ] ],
+					lines : {
+						show : true
+					},
+					points : {
+						show : false
+					},
+					color : 9
 				};
-				onDataReceived(series);
+				onDataReceived(serie);
 			}
 			break;
 		case 'get_routes':
+			
+			//<li><a href="#">Flickr</a></li>
+			
 			$.each(rxdata.info, function(key, value) {
-				var node = createnode('div', value[1], 'ruta', value[0])
+				var node = createnode('div', value[1], 'ruta', value[1]+' '+value[0])
 				$("#listarutas").append(node)
 			});
-			$("#listarutas").hide();
+			//$("#listarutas").hide();
 			$(".ruta").click(function() {
+				
+				//Guardar el id de la ruta seleccionada
+				routeID = $(this).attr("id")
+				
 				socket.send({
 					action : 'get_route',
 					'route_id' : $(this).attr("id")
 				});
 			});
 			break;
-		case 'do_route':
-			console.log(rxdata.gpsData);
-			// console.log(data);
-			// socket.broadcast_channel({"action": "do_route", "gpsData":
-			// gpsData,
-			// "nextPoin": point, 'distance_to': dist}, 'navigation')
-			var upData = {
-				label : 'nextPoint',
-				data : [ rxdata.nextPoint,
-						[ rxdata.gpsData.lat, rxdata.gpsData.lon ] ],
-				color : 7
-			}
-			onDataReceived(upData);
-			if (rxdata.gpsData != '') {
-				var series = {
-					label : 'GPS',
-					data : [ [ rxdata.gpsData.lat, rxdata.gpsData.lon ] ],
-					color : 4
-				};
-				onDataReceived(series);
-			}
-			console.log("DOXROUTE");
+		case 'nexpPointInfo':
 			break;
-		case 'blublu':
-			console.log('blueblue');
+		case 'routeIsStart':
+			if ($("#stoproute").is(":hidden")) {
+				$("#stoproute").slideDown("fast");
+			}
+			$("#startroute").removeClass('pure-button pure-button-success');
+			$("#startroute").addClass('pure-button pure-button-disabled');
+			break;
+		case 'routeIsStop':
+			$("#startroute").removeClass('pure-button pure-button-disabled');
+			$("#startroute").addClass('pure-button pure-button-success');
+			$("#stoproute").hide("fast")
 			break;
 		default:
-			console.log("BlaBlaBLa");
+			console.log("Recibido algo fuera de lo comun");
 		}
 	};
 
@@ -185,22 +200,15 @@ $(function() {
 	// HTML - CSS
 	$("#startroute").click(function() {
 		socket.send({
-			action : 'startRoute'
+			action : 'startRoute',
+			rid: routeID //rid Route ID
 		});
-
-		if ($("#stoproute").is(":hidden")) {
-			$("#stoproute").slideDown("fast");
-		}
-		$("#startroute").removeClass('pure-button pure-button-success');
-		$("#startroute").addClass('pure-button pure-button-disabled');
 	});
+
 	$("#stoproute").click(function() {
 		socket.send({
 			action : 'stopRoute'
-		});
-		$("#startroute").removeClass('pure-button pure-button-disabled');
-		$("#startroute").addClass('pure-button pure-button-success');
-		$("#stoproute").hide("fast")
+		});	
 	});
 	$("#stoproute").hide();
 

@@ -10,15 +10,52 @@
 	src="/static/jquery.flot.js"></script>
 <script language="javascript" type="text/javascript"
 	src="/static/jquery.flot.navigate.js"></script>
+
+<script language="javascript" type="text/javascript"
+	src="/static/jquery.flot.image.js"></script>
 {% endblock %} {% block main %}
 
+<table class="pure-table">
+	<thead>
+		<tr>
+			<th>#</th>
+			<th>Latitud</th>
+			<th>Longitud</th>
+			<th>Track(Angulo)</th>
+			<th>Velocidad</th>
+			<th>Distancia a:</th>
+			<th>Tiempo</th>
+		</tr>
+	</thead>
 
+	<tbody>
+		<tr class="pure-table-odd">
+			<td>GPS</td>
+			<td id="gpsLat">-</td>
+			<td id="gpsLon">-</td>
+			<td id="gpsTrack">-</td>
+			<td id="gpsSpeed">-</td>
+			<td>-</td>
+			<td id="gpsTime">-</td>
+
+		</tr>
+
+		<tr>
+			<td>NextPoint</td>
+			<td id="npLat">-</td>
+			<td id="npLon">-</td>
+			<td id="npTrack">-</td>
+			<td>-</td>
+			<td id="npDistance">-</td>
+			<td>-</td>
+		</tr>
+	</tbody>
+</table>
 
 <div class="navigation">
 	<div class="demo-container">
 		<div id="navi_map" class="map_placeholder"></div>
 		<div class="map_options">
-
 			<table id="routecontroltable" class="pure-table">
 				<td><button id="startroute"
 						class="pure-button pure-button-success">Empezar ruta</button></td>
@@ -30,7 +67,6 @@
 				<div id="switchrutas">Lista de rutas</div>
 				<div id="listarutas"</div>
 			</div>
-
 		</div>
 	</div>
 

@@ -29,21 +29,24 @@ def navigation(request, socket, context, message):
     try:
         if message['action'] == 'startRoute':
             if not _thrd.has_key('RouteThread'):
-                _thrd['RouteThread'] = RouteThread()
+                rid  = message['rid']
+                _thrd['RouteThread'] = RouteThread(rid)
                 _thrd['RouteThread'].setDaemon(True)
                 _thrd['RouteThread'].start()
+                broadcast_channel({'action':'routeIsStart'}, 'navigation')
                 
         elif message['action'] == 'stopRoute':
                 print _thrd
                 _thrd['RouteThread'].stop()
                 del _thrd['RouteThread']
-
+                broadcast_channel({'action':'routeIsStop'}, 'navigation')
+                
         elif message['action'] == 'get_route':
             # print "get_route"
             route = {};
             rout = Route.objects.get(id=message['route_id']);
             coords = Route.get_only_coord(rout);
-            route = {'action':'route', 'series': {"label": rout.name, "data":coords}}
+            route = {'action':'loadRoute', 'route': coords}
             socket.send(route)
 
         elif message['action'] == 'get_routes':
