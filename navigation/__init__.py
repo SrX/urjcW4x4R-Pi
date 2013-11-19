@@ -1,17 +1,12 @@
 import threading
-
 import logging
 import time
-
-from coord import *
-
-from navigation.models import Route, Coord;
-_thrd = dict()
-
-
-
 import sys
 import gps
+from django_socketio import broadcast_channel
+from django_socketio import NoSocket
+from coord import *
+from navigation.models import Route, Coord;
 
 class StartGps(object):
     def __init__(self):
@@ -49,16 +44,6 @@ class StartGps(object):
                 # 'alt'  :   self._gps.fix.altitude,
                 }
 
-
-_gps = StartGps();
-
-
-
-from django_socketio import broadcast_channel
-from django_socketio import NoSocket
-
-
-
 class BrodcastThread(threading.Thread):
     def run(self):
         time.sleep(5);
@@ -70,16 +55,7 @@ class BrodcastThread(threading.Thread):
             except NoSocket:
                 time.sleep(5);
             
-
-
-bth = BrodcastThread()
-bth.setDaemon(True)
-bth.start()
-
-
-
 # thread.start_new_thread(print_time, ("Thread-1", 2, socket))
-
 
 class RouteThread(threading.Thread):
 
@@ -128,3 +104,11 @@ class RouteThread(threading.Thread):
                         reached = True
         except:
             raise
+
+_thrd = dict()
+
+_gps = StartGps();
+
+bth = BrodcastThread()
+bth.setDaemon(True)
+bth.start()

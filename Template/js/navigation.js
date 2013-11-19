@@ -1,14 +1,6 @@
-$(function() {
-	var routeID = -1;
+$(document).ready(function() {
+	var routeID = -1;//esto igual no deberia llevar var
 	// add zoom out button
-
-	function createnode(elem, id, nameclass, html) {
-		var item = document.createElement(elem);
-		item.setAttribute("id", id);
-		item.setAttribute('class', nameclass);
-		item.innerHTML = html;
-		return item
-	}
 
 	var options = {
 
@@ -79,8 +71,38 @@ $(function() {
 		
 		$.plot(navi_map, data, options);
 
+	};
+
+	function createnode(elem, id, nameclass, html) {
+		var item = document.createElement(elem);
+		item.setAttribute("id", id);
+		item.setAttribute('class', nameclass);
+		item.innerHTML = html;
+		return item
 	}
-	;
+
+	$("#switchrutas").click(function(i) {
+		if ($(this).parent().children("#listarutas").is(":hidden")) {
+			$(this).parent().children("#listarutas").slideDown("slow");
+		} else {
+			$(this).parent().children("#listarutas").hide("slow");
+		}
+	})	
+
+	// HTML - CSS
+	$("#startroute").click(function() {
+		socket.send({
+			action : 'startRoute',
+			rid: routeID //rid Route ID
+		});
+	});
+
+	$("#stoproute").click(function() {
+		socket.send({
+			action : 'stopRoute'
+		});	
+	});
+	$("#stoproute").hide();
 
 	var messaged = function(rxdata) {
 		console.log("messaged_data_navigation");
@@ -202,29 +224,6 @@ $(function() {
 		socket.on('message', messaged);
 	};
 
-	$("#switchrutas").click(function(i) {
-		if ($(this).parent().children("#listarutas").is(":hidden")) {
-			$(this).parent().children("#listarutas").slideDown("slow");
-		} else {
-			$(this).parent().children("#listarutas").hide("slow");
-		}
-	})
-
 	start();
-
-	// HTML - CSS
-	$("#startroute").click(function() {
-		socket.send({
-			action : 'startRoute',
-			rid: routeID //rid Route ID
-		});
-	});
-
-	$("#stoproute").click(function() {
-		socket.send({
-			action : 'stopRoute'
-		});	
-	});
-	$("#stoproute").hide();
 
 });
