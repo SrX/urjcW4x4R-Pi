@@ -11,13 +11,14 @@ from navigation.models import Route, Coord;
 def message(request, socket, context, message):
     print "manual_control"
     try:
-        if message['action'] == 'startroute' and is_integer(message['interv']):
-            if not _thrd.has_key('RecordThread'):
-                _thrd['RecordThread'] = RecordThread(message['name'], message['interv'])
-                _thrd['RecordThread'].setDaemon(True)
-                _thrd['RecordThread'].start()
-                rec.recording=1
-                socket.send_and_broadcast_channel({'action':'startedroute'}) #tabular
+        if message['action'] == 'startroute':
+            if is_integer(message['interv']) and not name_used(message['name']):
+                if not _thrd.has_key('RecordThread'):
+                    _thrd['RecordThread'] = RecordThread(message['name'], message['interv'])
+                    _thrd['RecordThread'].setDaemon(True)
+                    _thrd['RecordThread'].start()
+                    rec.recording=1
+                    socket.send_and_broadcast_channel({'action':'startedroute'}) #tabular
         elif message['action'] == 'stoproute':
             _thrd['RecordThread'].stop()
             del _thrd['RecordThread']

@@ -13,6 +13,14 @@ def is_integer(s):
     except ValueError:
         return False
 
+def name_used(s):
+    try:
+        Route.objects.get(name=s)
+        return True
+    except:
+        return False
+
+
 class Control(object):
     def __init__ (self):
         self.ws_value = 90
