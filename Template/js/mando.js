@@ -26,29 +26,6 @@ $(document).ready(function() {
         }
     });
 
-    $("#w").click(function () {
-        socket.send({action: 'w'});
-    });
-    $("#s").click(function () {
-        socket.send({action: 's'});
-    });
-    $("#a").click(function () {
-        socket.send({action: 'a'});
-    });
-    $("#d").click(function () {
-        socket.send({action: 'd'});
-    });
-    $("#stop").click(function () {
-       socket.send({action: 'q'});
-    });
-    $("#startroute").click(function () {
-        socket.send({action: 'startroute'});
-    });
-     $("#stoproute").click(function () {
-        socket.send({action: 'stoproute'});
-    });   
-
-
     SendInputKey = function() {
         var move = ''
         if (keys['straight']) {
@@ -72,6 +49,31 @@ $(document).ready(function() {
     };
 
 
+    $("#w").click(function () {
+        socket.send({action: 'w'});
+    });
+    $("#s").click(function () {
+        socket.send({action: 's'});
+    });
+    $("#a").click(function () {
+        socket.send({action: 'a'});
+    });
+    $("#d").click(function () {
+        socket.send({action: 'd'});
+    });
+    $("#stop").click(function () {
+       socket.send({action: 'q'});
+    });
+    $("#startroute").click(function () {
+        socket.send({
+            action: 'startroute',
+            name: $("#nameroute").val(),
+            interv: $("#interoute").val()
+        });
+    });
+     $("#stoproute").click(function () {
+        socket.send({action: 'stoproute'});
+    });   
 
     var messaged = function(data) {
         console.log("messaged_data");

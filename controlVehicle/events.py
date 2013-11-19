@@ -1,21 +1,19 @@
-from django_socketio import events
-from django_socketio import broadcast_channel
-
-from controlVehicle import *
-from controlVehicle import RecordThread
-from navigation.models import Route, Coord;
-from navigation import _gps;
-from navigation import _thrd
 import time
 import threading
+from django_socketio import events
+from django_socketio import broadcast_channel
+from controlVehicle import *
+from navigation import _gps;
+from navigation import _thrd
+from navigation.models import Route, Coord;
 
 @events.on_message(channel="hand_control")
 def message(request, socket, context, message):
     print "manual_control"
     try:
-        if message['action'] == 'startroute':
+        if message['action'] == 'startroute' and is_integer(message['interv']):
             if not _thrd.has_key('RecordThread'):
-                _thrd['RecordThread'] = RecordThread()
+                _thrd['RecordThread'] = RecordThread(message['name'], message['interv'])
                 _thrd['RecordThread'].setDaemon(True)
                 _thrd['RecordThread'].start()
                 rec.recording=1
@@ -27,8 +25,6 @@ def message(request, socket, context, message):
             rec.recording=0
             socket.send_and_broadcast_channel({'action':'stoppedroute'})
         elif message['action'] == 'init':
-            print str(vehicle.ws_value)
-            print str(rec.recording)
             ret = {'action':'init', 'ws': vehicle.ws_value, 'ad': vehicle.ad_value, 'recording': rec.recording};
             socket.send_and_broadcast_channel(ret)
         else:

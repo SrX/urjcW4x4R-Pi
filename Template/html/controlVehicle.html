@@ -21,48 +21,52 @@
 <div class="controls">
 	<table id="controltable" class="pure-table">
 	<thead>
-			<tr>
-				<th>Velocidad</th>
-				<th></th>
-				<th>Giro</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr class="pure-table-odd">
-				<td><div id="velocidad">90</div></td>
-				<td></td>
-				<td><div id="giro">90</div></td>
-			</tr>
-			
-			<tr>
-				<td></td>
-				<td><button id="w" class="pure-button pure-button-success">W</button></td>
-				<td></td>
-			</tr>
+		<tr>
+			<th>Velocidad</th>
+			<th></th>
+			<th>Giro</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr class="pure-table-odd">
+			<td><div id="velocidad">90</div></td>
+			<td></td>
+			<td><div id="giro">90</div></td>
+		</tr>
+		
+		<tr>
+			<td></td>
+			<td><button id="w" class="pure-button pure-button-success">W</button></td>
+			<td></td>
+		</tr>
 
-			<tr>
-				<td><button id="a" class="pure-button pure-button-secondary">A</button></td>
-				<td><button id="s" class="pure-button pure-button-success">S</button></td>
-				<td><button id="d" class="pure-button pure-button-secondary">D</button></td>
-			</tr>
+		<tr>
+			<td><button id="a" class="pure-button pure-button-secondary">A</button></td>
+			<td><button id="s" class="pure-button pure-button-success">S</button></td>
+			<td><button id="d" class="pure-button pure-button-secondary">D</button></td>
+		</tr>
 
-			<tr>
-				<td colspan="3"><button id="stop"
-						class="pure-button pure-button-error" stype="width:150px">STOP</button></td>
-			</tr>
-			<tr>
-		</tbody>
+		<tr>
+			<td colspan="3"><button id="stop"
+					class="pure-button pure-button-error" stype="width:150px">STOP</button></td>
+		</tr>
+		<tr>
+	</tbody>
 	</table>
 	<table id="routecontroltable" class="pure-table">
+	<thead>
+		<tr>
+			<th>Nombre</th>
+			<th>Intervalo</th>
+		</tr>
+	</thead>
+		<tr>
+			<td><input type="text" id="nameroute"/></td>
+			<td><input type="text" id="interoute"/></td>
+		</tr>
 		<tr>
 			<td><button id="startroute" class="pure-button pure-button-success">Grabar</button></td>
 			<td><button id="stoproute" class="pure-button pure-button-error">Parar</button></td>
-		</tr>
-		<tr>
-			<td>Nombre ruta: <input type="text" id="nameroute"/></td>
-		</tr>
-		<tr>
-			<td>Intervalo: <input type="text" id="introute"/></td>
 		</tr>
 	</table>
 </div>

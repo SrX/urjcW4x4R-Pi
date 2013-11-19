@@ -1,18 +1,12 @@
+import time
+import threading
+import sys
 from django_socketio import events
 from django_socketio import broadcast_channel
-
-
-from navigation.models import Route, Coord;
-
 from navigation import _gps
 from navigation import _thrd
 from navigation import RouteThread
-
-import time
-
-import threading
-
-import sys
+from navigation.models import Route, Coord;
 
 def do_route(rid):
     print 'do_route'

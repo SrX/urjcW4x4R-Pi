@@ -6,6 +6,13 @@ import threading
 from navigation.models import Route, Coord;
 from navigation import _gps;
 
+def is_integer(s):
+    try:
+        int(s)
+        return True
+    except ValueError:
+        return False
+
 class Control(object):
     def __init__ (self):
         self.ws_value = 90
@@ -84,21 +91,21 @@ class RecordThread(threading.Thread):
     """Thread class with a stop() method. The thread itself has to check
     regularly for the stopped() condition."""
 
-    def __init__(self):
+    def __init__(self, nameroute, interoute):
         super(RecordThread, self).__init__()
         self._stop = threading.Event()
+        self.nameroute = nameroute
+        self.interoute = interoute
 
     def run(self):
-        intervalo = 5;
-        nameroute = "Ruta 5"
         i=0;
         try:
-            rout = Route.objects.create(name=nameroute)
+            rout = Route.objects.create(name=self.nameroute)
             print "Guardando en base de datos nueva ruta.."
             while not self.stopped():
                 i+=1
                 cp = _gps.update();
-                if (i % intervalo) == 0 and float(cp['lon']) != 0.0:
+                if (i % int(self.interoute)) == 0 and float(cp['lon']) != 0.0:
                     print str(i)
                     cor = Coord.objects.create(route=rout, lat=float(cp['lat']), lon=float(cp['lon']), track=float(cp['track']), speed=float(cp['speed']), time=cp['time']);
         except:
