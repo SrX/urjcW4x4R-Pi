@@ -29,32 +29,35 @@ def navigation(request, socket, context, message):
                 _thrd['RouteThread'] = RouteThread(rid)
                 _thrd['RouteThread'].setDaemon(True)
                 _thrd['RouteThread'].start()
-                broadcast_channel({'action':'routeIsStart'}, 'navigation')
+                broadcast_channel({'action':'routeIsStarted'}, 'navigation')
                 
         elif message['action'] == 'stopRoute':
                 print _thrd
                 _thrd['RouteThread'].stop()
                 del _thrd['RouteThread']
-                broadcast_channel({'action':'routeIsStop'}, 'navigation')
+                broadcast_channel({'action':'routeIsStopped'}, 'navigation')
                 
         elif message['action'] == 'get_route':
             # print "get_route"
-            route = {};
             rout = Route.objects.get(id=message['route_id']);
             coords = Route.get_only_coord(rout);
             route = {'action':'loadRoute', 'route': coords}
             socket.send(route)
 
+        elif message['action'] == 'delete_route':
+            rout = Route.objects.get(id=message['route_id'])
+            rout.delete();
+            route = {'action':'deleted_route', 'id': message['route_id']}
+            socket.send(route)
+
         elif message['action'] == 'get_routes':
             routes = Route.objects.all();
-            print routes;
             routeslist = []
             for route in routes:
                 routeinfo = []
                 routeinfo.append(route.name)
                 routeinfo.append(route.id)
                 routeslist.append(routeinfo)
-            print "AQUIIIIIIIII"
             route2 = {'action':'get_routes', 'info': routeslist}
             socket.send(route2)
     except:

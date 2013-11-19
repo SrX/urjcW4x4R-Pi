@@ -121,36 +121,51 @@ $(function() {
 				onDataReceived(serie);
 			}
 			break;
+		case 'deleted_route':
+			console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+			//HACER QUE SE DESELECCIONE
+			$('#'+rxdata.id).remove();
+			break;
 		case 'get_routes':
-			
-			//<li><a href="#">Flickr</a></li>
-			
 			$.each(rxdata.info, function(key, value) {
-				var node = createnode('div', value[1], 'ruta', value[1]+' '+value[0])
+				var node = createnode('div', value[1], '', '')
+				var nameroute = createnode('div', '', 'ruta', value[1] + ' ' + value[0])
+				var deleteroute = createnode('div', '', 'delete', 'Borrar')
+				node.appendChild(nameroute)
+				node.appendChild(deleteroute)
 				$("#listarutas").append(node)
 			});
-			//$("#listarutas").hide();
 			$(".ruta").click(function() {
 				
 				//Guardar el id de la ruta seleccionada
-				routeID = $(this).attr("id")
+				routeID = $(this).parent().attr("id")
 				
 				socket.send({
 					action : 'get_route',
-					'route_id' : $(this).attr("id")
+					'route_id' : routeID
+				});
+			});
+			$(".delete").click(function() {
+				
+				//Guardar el id de la ruta seleccionada
+				routeID = $(this).parent().attr("id")
+				
+				socket.send({
+					action : 'delete_route',
+					'route_id' : routeID
 				});
 			});
 			break;
 		case 'nexpPointInfo':
 			break;
-		case 'routeIsStart':
+		case 'routeIsStarted':
 			if ($("#stoproute").is(":hidden")) {
 				$("#stoproute").slideDown("fast");
 			}
 			$("#startroute").removeClass('pure-button pure-button-success');
 			$("#startroute").addClass('pure-button pure-button-disabled');
 			break;
-		case 'routeIsStop':
+		case 'routeIsStopped':
 			$("#startroute").removeClass('pure-button pure-button-disabled');
 			$("#startroute").addClass('pure-button pure-button-success');
 			$("#stoproute").hide("fast")

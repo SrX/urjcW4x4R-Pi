@@ -63,7 +63,7 @@ class BrodcastThread(threading.Thread):
     def run(self):
         time.sleep(5);
         while True:
-            time.sleep(0.01);
+            time.sleep(0.2);
             gpsInfo = _gps.update()
             try:
                 broadcast_channel({'action':'gpsInfo', 'gpsData': gpsInfo}, 'navigation')

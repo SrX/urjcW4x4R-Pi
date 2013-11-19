@@ -89,8 +89,8 @@ class RecordThread(threading.Thread):
         self._stop = threading.Event()
 
     def run(self):
-        intervalo = 2;
-        nameroute = "Ruta BUENISIMA"
+        intervalo = 5;
+        nameroute = "Ruta 5"
         i=0;
         try:
             rout = Route.objects.create(name=nameroute)
@@ -99,7 +99,7 @@ class RecordThread(threading.Thread):
                 i+=1
                 cp = _gps.update();
                 if (i % intervalo) == 0 and float(cp['lon']) != 0.0:
-                    print 'punto guardado'
+                    print str(i)
                     cor = Coord.objects.create(route=rout, lat=float(cp['lat']), lon=float(cp['lon']), track=float(cp['track']), speed=float(cp['speed']), time=cp['time']);
         except:
             raise
