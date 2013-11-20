@@ -3,6 +3,7 @@ import threading
 import sys
 from django_socketio import events
 from django_socketio import broadcast_channel
+from navigation import rs
 from navigation import _gps
 from navigation import _thrd
 from navigation import RouteThread
@@ -19,16 +20,17 @@ def navigation(request, socket, context, message):
     try:
         if message['action'] == 'startRoute':
             if not _thrd.has_key('RouteThread'):
-                rid  = message['rid']
-                _thrd['RouteThread'] = RouteThread(rid)
-                _thrd['RouteThread'].setDaemon(True)
-                _thrd['RouteThread'].start()
-                broadcast_channel({'action':'routeIsStarted'}, 'navigation')
+                if message['rid'] != -1:
+                    _thrd['RouteThread'] = RouteThread(message['rid'])
+                    _thrd['RouteThread'].setDaemon(True)
+                    _thrd['RouteThread'].start()
+                    rs.started = 1
+                    broadcast_channel({'action':'routeIsStarted'}, 'navigation')
                 
         elif message['action'] == 'stopRoute':
-                print _thrd
                 _thrd['RouteThread'].stop()
                 del _thrd['RouteThread']
+                rs.started=0
                 broadcast_channel({'action':'routeIsStopped'}, 'navigation')
                 
         elif message['action'] == 'get_route':
@@ -44,7 +46,7 @@ def navigation(request, socket, context, message):
             route = {'action':'deleted_route', 'id': message['route_id']}
             socket.send(route)
 
-        elif message['action'] == 'get_routes':
+        elif message['action'] == 'init':
             routes = Route.objects.all();
             routeslist = []
             for route in routes:
@@ -52,7 +54,7 @@ def navigation(request, socket, context, message):
                 routeinfo.append(route.name)
                 routeinfo.append(route.id)
                 routeslist.append(routeinfo)
-            route2 = {'action':'get_routes', 'info': routeslist}
+            route2 = {'action':'init', 'info': routeslist, 'routestate': rs.started}
             socket.send(route2)
     except:
         raise

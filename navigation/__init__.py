@@ -105,6 +105,10 @@ class RouteThread(threading.Thread):
         except:
             raise
 
+class Route(object):
+    def __init__ (self):
+        self.started = 0
+
 _thrd = dict()
 
 _gps = StartGps();
@@ -112,3 +116,5 @@ _gps = StartGps();
 bth = BrodcastThread()
 bth.setDaemon(True)
 bth.start()
+
+rs = Route()

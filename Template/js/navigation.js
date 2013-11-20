@@ -148,7 +148,7 @@ $(document).ready(function() {
 			//HACER QUE SE DESELECCIONE
 			$('#'+rxdata.id).remove();
 			break;
-		case 'get_routes':
+		case 'init':
 			$.each(rxdata.info, function(key, value) {
 				var node = createnode('div', value[1], '', '')
 				var nameroute = createnode('div', '', 'ruta', value[1] + ' ' + value[0])
@@ -167,16 +167,19 @@ $(document).ready(function() {
 					'route_id' : routeID
 				});
 			});
-			$(".delete").click(function() {
-				
-				//Guardar el id de la ruta seleccionada
-				routeID = $(this).parent().attr("id")
-				
+			$(".delete").click(function() {		
 				socket.send({
 					action : 'delete_route',
-					'route_id' : routeID
+					'route_id' : $(this).parent().attr("id")
 				});
 			});
+			if (rxdata.routestate==1){
+				$("#startroute").removeClass('pure-button pure-button-success');
+				$("#startroute").addClass('pure-button pure-button-disabled');
+				if ($("#stoproute").is(":hidden")) {
+					$("#stoproute").slideDown("fast");
+				}		
+			}	
 			break;
 		case 'nexpPointInfo':
 			break;
@@ -202,7 +205,7 @@ $(document).ready(function() {
 		socket.subscribe('navigation');
 
 		socket.send({
-			action : 'get_routes'
+			action : 'init'//get routes y comprobar si esta haciendo ruta
 		});
 
 		socket.send({
