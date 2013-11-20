@@ -144,8 +144,6 @@ $(document).ready(function() {
 			}
 			break;
 		case 'deleted_route':
-			console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-			//HACER QUE SE DESELECCIONE
 			$('#'+rxdata.id).remove();
 			break;
 		case 'init':
@@ -171,7 +169,22 @@ $(document).ready(function() {
 				var currentid = $(this).parent().attr("id")
 				if (currentid == routeID){
 					routeID=-1
-				}
+					var serie = {
+						label : 'Ruta',
+						data : [],
+
+						color : 7,
+
+						lines : {
+							show : false
+						},
+						points : {
+							show : true
+						},
+						clickable : true
+					};
+					loadRouteToMap(serie)
+				}		
 				socket.send({
 					action : 'delete_route',
 					'route_id' : currentid
