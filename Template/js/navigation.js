@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	var routeID = -1;//esto igual no deberia llevar var
+	routeID = -1;//esto igual no deberia llevar var
 	// add zoom out button
 
 	var options = {
@@ -168,9 +168,13 @@ $(document).ready(function() {
 				});
 			});
 			$(".delete").click(function() {		
+				var currentid = $(this).parent().attr("id")
+				if (currentid == routeID){
+					routeID=-1
+				}
 				socket.send({
 					action : 'delete_route',
-					'route_id' : $(this).parent().attr("id")
+					'route_id' : currentid
 				});
 			});
 			if (rxdata.routestate==1){
