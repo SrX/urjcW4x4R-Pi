@@ -21,6 +21,7 @@ def navigation(request, socket, context, message):
         if message['action'] == 'startRoute':
             if not _thrd.has_key('RouteThread'):
                 if message['rid'] != -1:
+                    print message['rid']
                     _thrd['RouteThread'] = RouteThread(message['rid'])
                     _thrd['RouteThread'].setDaemon(True)
                     _thrd['RouteThread'].start()

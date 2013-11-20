@@ -168,7 +168,8 @@ $(document).ready(function() {
 			$(".delete").click(function() {		
 				var currentid = $(this).parent().attr("id")
 				if (currentid == routeID){
-					routeID=-1
+					routeID=-1; //para no pasarle un ID en caso de startroute
+								//si era el mismo
 					var serie = {
 						label : 'Ruta',
 						data : [],
