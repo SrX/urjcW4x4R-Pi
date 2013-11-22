@@ -87,6 +87,8 @@ class RouteThread(threading.Thread):
             coords = Route.get_only_coord(rout)
             for point in coords:
                 reached = False;
+                infopoint={'action':'next_point', 'lat': point[0], 'lon': point[1]}
+                broadcast_channel(infopoint, 'navigation')
                 while not reached and not self.stopped():
                     gpsData = _gps.update()
                     if str(gpsData['track']) != "nan":
@@ -94,6 +96,8 @@ class RouteThread(threading.Thread):
                         H=heading_to(point, gpsData)
                         angle_diff = get_angle_diff(gpsData['track'], H)
                         turn_angle = angle_to_turn_angle(angle_diff) #lo devuelve como int
+                        infopoint={'action':'state_route', 'lat': gpsData['lat'], 'lon': gpsData['lon'], 'dist': dist}
+                        broadcast_channel(infopoint, 'navigation')
                         print 'gpsData: ' + str(gpsData['lat']) + ' ' + str(gpsData['lon']) + ' Next point: ' + str(point) + ' Distance: ' +str(dist) + ' Turn angle: ' + str(turn_angle)
                         # socket.send({"action": "dox_route", "gpsData": gpsData,"nextPoin": point, 'distance_to': dist})
                         if dist < 300 and dist != -1:

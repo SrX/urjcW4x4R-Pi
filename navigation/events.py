@@ -57,6 +57,7 @@ def navigation(request, socket, context, message):
                 routeslist.append(routeinfo)
             route2 = {'action':'init', 'info': routeslist, 'routestate': rs.started}
             socket.send(route2)
+
     except:
         raise
         

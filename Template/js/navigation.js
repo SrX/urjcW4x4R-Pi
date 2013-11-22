@@ -213,6 +213,15 @@ $(document).ready(function() {
 			$("#startroute").addClass('pure-button pure-button-success');
 			$("#stoproute").hide("fast")
 			break;
+		case 'next_point':
+			$("#npLat").html(rxdata.lat);
+			$("#npLon").html(rxdata.lon);
+			break;
+		case 'state_route':
+			$("#gpsLat").html(rxdata.lat);
+			$("#gpsLon").html(rxdata.lon);	
+			$("#npDistance").html(rxdata.dist);
+			break;		
 		default:
 			console.log("Recibido algo fuera de lo comun");
 		}
