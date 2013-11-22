@@ -82,18 +82,13 @@ class RouteThread(threading.Thread):
             time.sleep(5);
         except:
             raise
-        print 'BzZzzzzzzzzzzZzzzZZzzz'
-         
-
         try:
             rout = Route.objects.get(id=route_id)
             coords = Route.get_only_coord(rout)
             for point in coords:
-                print 'do_route'
                 reached = False;
                 while not reached and not self.stopped():
                     gpsData = _gps.update()
-                    print 'gpsData: ' + str(gpsData['lat']) + ' ' + str(gpsData['lon'])
                     if str(gpsData['track']) != "nan":
                         dist = distance_to(point, gpsData)
                         H=heading_to(point, gpsData)
@@ -103,7 +98,8 @@ class RouteThread(threading.Thread):
                         # socket.send({"action": "dox_route", "gpsData": gpsData,"nextPoin": point, 'distance_to': dist})
                         if dist < 300 and dist != -1:
                             reached = True
-                            print 'FIESTA =================== PUNTO ALCANZADO'
+                            print '================ FIESTA =================== PUNTO ALCANZADO'
+            print "Ruta terminada"
             _thrd['RouteThread'].stop()
             del _thrd['RouteThread']
             rs.started=0
