@@ -6,7 +6,7 @@ import gps
 from django_socketio import broadcast_channel
 from django_socketio import NoSocket
 from coord import *
-from navigation.models import Route, Coord;
+from navigation.models import Route, Coord
 
 class StartGps(object):
     def __init__(self):
@@ -86,26 +86,33 @@ class RouteThread(threading.Thread):
          
 
         try:
-            rout = Route.objects.get(id=route_id);
-            coords = Route.get_only_coord(rout);
+            rout = Route.objects.get(id=route_id)
+            coords = Route.get_only_coord(rout)
             for point in coords:
                 print 'do_route'
                 reached = False;
                 while not reached and not self.stopped():
                     gpsData = _gps.update()
-                    dist = distance_to(gpsData, point)
-        
-                    print str(gpsData['lat']) +' '+ str(gpsData['lon']) + ') <-gps '+ str(point) + '<-point   d->' + str(dist)
-    
-                    # socket.send({"action": "dox_route", "gpsData": gpsData,"nextPoin": point, 'distance_to': dist})
-                    print ' -z- '
-                    
-                    if dist < 100:
-                        reached = True
+                    print 'gpsData: ' + str(gpsData['lat']) + ' ' + str(gpsData['lon'])
+                    if str(gpsData['track']) != "nan":
+                        dist = distance_to(point, gpsData)
+                        H=heading_to(point, gpsData)
+                        angle_diff = get_angle_diff(gpsData['track'], H)
+                        turn_angle = angle_to_turn_angle(angle_diff) #lo devuelve como int
+                        print 'gpsData: ' + str(gpsData['lat']) + ' ' + str(gpsData['lon']) + ' Next point: ' + str(point) + ' Distance: ' +str(dist) + ' Turn angle: ' + str(turn_angle)
+                        # socket.send({"action": "dox_route", "gpsData": gpsData,"nextPoin": point, 'distance_to': dist})
+                        if dist < 300 and dist != -1:
+                            reached = True
+                            print 'FIESTA =================== PUNTO ALCANZADO'
+            _thrd['RouteThread'].stop()
+            del _thrd['RouteThread']
+            rs.started=0
+            broadcast_channel({'action':'routeIsStopped'}, 'navigation')
+      
         except:
             raise
 
-class Route(object):
+class RouteState(object):
     def __init__ (self):
         self.started = 0
 
@@ -117,4 +124,4 @@ bth = BrodcastThread()
 bth.setDaemon(True)
 bth.start()
 
-rs = Route()
+rs = RouteState()

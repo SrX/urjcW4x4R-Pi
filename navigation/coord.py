@@ -4,13 +4,11 @@ import sys
 # http://www.todopic.com.ar/foros/index.php?PHPSESSID=nvmismbs6oqmqvaf47euhib115&topic=26373.msg216172#msg216172
 def distance_to(point, to_point):
     try:
-        lat1 = radians(float(to_point[0]))
-        lon1 = radians(float(to_point[1]))
+        lat1 = radians(float(point[0]))
+        lon1 = radians(float(point[1]))
         
-        lat2 = radians(float(point['lat']))
-        lon2 = radians(float(point['lon']))
-        
-        
+        lat2 = radians(float(to_point['lat']))
+        lon2 = radians(float(to_point['lon']))
 
         d = (acos(sin(lat1) * sin(lat2) \
               + cos(lat1) * cos(lat2) \
@@ -23,11 +21,11 @@ def distance_to(point, to_point):
     
 def heading_to(point, to_point):
     try:
-        lat1 = radians(float(to_point[0]))
-        lon1 = radians(float(to_point[1]))
+        lat1 = radians(float(point[0]))
+        lon1 = radians(float(point[1]))
         
-        lat2 = radians(float(point['lat']))
-        lon2 = radians(float(point['lon']))
+        lat2 = radians(float(to_point['lat']))
+        lon2 = radians(float(to_point['lon']))
         
         y = sin(lon2 - lon1) * cos(lat2)
         x = cos(lat1) * sin(lat2) \

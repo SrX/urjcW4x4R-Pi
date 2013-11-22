@@ -114,7 +114,7 @@ class RecordThread(threading.Thread):
                 i+=1
                 cp = _gps.update();
                 if (i % int(self.interoute)) == 0 and float(cp['lon']) != 0.0:
-                    print str(i)
+                    print "Punto guardado"
                     cor = Coord.objects.create(route=rout, lat=float(cp['lat']), lon=float(cp['lon']), track=float(cp['track']), speed=float(cp['speed']), time=cp['time']);
         except:
             raise
