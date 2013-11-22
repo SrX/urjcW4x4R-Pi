@@ -7,7 +7,6 @@ from django_socketio import broadcast_channel
 from django_socketio import NoSocket
 from coord import *
 from navigation.models import Route, Coord
-from controlVehicle import *
 
 class StartGps(object):
     def __init__(self):
@@ -88,7 +87,7 @@ class RouteThread(threading.Thread):
             coords = Route.get_only_coord(rout)
             for point in coords:
                 try:
-                    vehicle.speed(94)#velocidad minima
+                    vehi.speed(94)#velocidad minima
                 except:
                     pass
                 reached = False;
@@ -103,7 +102,7 @@ class RouteThread(threading.Thread):
                         turn_angle = angle_to_turn_angle(angle_diff) #lo devuelve como int
                         try:
                             print "VOY A GIRAR"
-                            vehicle.turn(turn_angle)
+                            vehi.turn(turn_angle)
                         except:
                             pass
                         infopoint={'action':'state_route', 'lat': gpsData['lat'], 'lon': gpsData['lon'], 'dist': dist}
@@ -118,7 +117,8 @@ class RouteThread(threading.Thread):
                 _thrd['RouteThread'].stop()
                 del _thrd['RouteThread']
                 rs.started=0
-                vehicle.reset()
+                vehi.speed(90)
+                vehi.turn(90)
                 broadcast_channel({'action':'routeIsStopped'}, 'navigation')
       
         except:
@@ -129,6 +129,29 @@ class RouteState(object):
         self.started = 0
         self.id = -1
 
+class Control:
+
+    # arreglar el fallo del log
+    def __init__ (self, usbport):
+        try:
+            self.arduino_conect = serial.Serial('/dev/ttyUSB0', 9600, timeout=1)
+        except:  # except (StopIteration):
+            print "Unexpected error: Control ", sys.exc_info()[0]
+            self.arduino_conect = ''
+            pass
+
+
+    def speed(self, velocidad):
+        self.arduino_conect.write(chr(255))
+        self.arduino_conect.write(chr(2))
+        self.arduino_conect.write(chr(velocidad))
+
+    def turn(self, grados):
+        print "VAMOS QUE GIRO"
+        self.arduino_conect.write(chr(255)) 
+        self.arduino_conect.write(chr(1))
+        self.arduino_conect.write(chr(grados))
+
 _thrd = dict()
 
 _gps = StartGps();
@@ -138,3 +161,5 @@ bth.setDaemon(True)
 bth.start()
 
 rs = RouteState()
+
+vehi = Control('/dev/ttyUSB0')
