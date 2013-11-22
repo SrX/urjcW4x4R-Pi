@@ -87,7 +87,7 @@ class RouteThread(threading.Thread):
             coords = Route.get_only_coord(rout)
             for point in coords:
                 try:
-                    vehi.speed(94)#velocidad minima
+                    vehicle.speed(94)#velocidad minima
                 except:
                     pass
                 reached = False;
@@ -101,8 +101,7 @@ class RouteThread(threading.Thread):
                         angle_diff = get_angle_diff(gpsData['track'], H)
                         turn_angle = angle_to_turn_angle(angle_diff) #lo devuelve como int
                         try:
-                            print "VOY A GIRAR"
-                            vehi.turn(turn_angle)
+                            vehicle.turn(turn_angle)
                         except:
                             pass
                         infopoint={'action':'state_route', 'lat': gpsData['lat'], 'lon': gpsData['lon'], 'dist': dist}
@@ -117,8 +116,8 @@ class RouteThread(threading.Thread):
                 _thrd['RouteThread'].stop()
                 del _thrd['RouteThread']
                 rs.started=0
-                vehi.speed(90)
-                vehi.turn(90)
+                vehicle.speed(90)
+                vehicle.turn(90)
                 broadcast_channel({'action':'routeIsStopped'}, 'navigation')
       
         except:
@@ -129,28 +128,79 @@ class RouteState(object):
         self.started = 0
         self.id = -1
 
-class Control:
-
-    # arreglar el fallo del log
-    def __init__ (self, usbport):
+class Control(object):
+    def __init__ (self):
+        self.ws_value = 90
+        self.ad_value = 90
+        
+        # Paso del incremento
+        self.inc = 1;
+        
         try:
             self.arduino_conect = serial.Serial('/dev/ttyUSB0', 9600, timeout=1)
         except:  # except (StopIteration):
             print "Unexpected error: Control ", sys.exc_info()[0]
             self.arduino_conect = ''
             pass
+        
+        self.reset()
+        
+        
+    def reset(self):
+        self.ws_value = 90
+        self.ad_value = 90
+        self.set(self.ws_value, self.ad_value)
+        
+    def action(self, action):
+        if action == 'w':
+            self.ws_value += self.inc
+        elif action == 's':
+            self.ws_value -= self.inc
+        elif action == 'd':
+            self.ad_value += self.inc
+        elif action == 'a':
+            self.ad_value -= self.inc
+        else:  # action == 'q':
+            # por medidas de seguridad, si el coche se escapa 
+            # y/o el piloto se pone nervioso
+            self.reset()
+        
+        self.evalue_wa()
+        self.set(self.ws_value, self.ad_value)
+        
+        #devolver el valor, el que se ha pasado al coche
+        return self.ws_value, self.ad_value
+            
+    def set(self, speed, angle):
+        
 
+        print 'Vehicle: s-' + str(speed) + ' a-' + str(angle)
 
+        if self.arduino_conect != '':
+            self.speed(speed)
+            self.turn(angle)
+        
     def speed(self, velocidad):
-        self.arduino_conect.write(chr(255))
-        self.arduino_conect.write(chr(2))
-        self.arduino_conect.write(chr(velocidad))
+            self.arduino_conect.write(chr(255))
+            self.arduino_conect.write(chr(2))
+            self.arduino_conect.write(chr(velocidad))
+
 
     def turn(self, grados):
-        print "VAMOS QUE GIRO"
-        self.arduino_conect.write(chr(255)) 
-        self.arduino_conect.write(chr(1))
-        self.arduino_conect.write(chr(grados))
+            self.arduino_conect.write(chr(255)) 
+            self.arduino_conect.write(chr(1))
+            self.arduino_conect.write(chr(grados))
+            
+    def evalue_wa(self):
+        if self.ws_value > 120:
+            self.ws_value = 120
+        elif self.ws_value < 60:
+            self.ws_value = 60
+        
+        if self.ad_value > 120:
+            self.ad_value = 120
+        elif self.ad_value < 60:
+            self.ad_value = 60
 
 _thrd = dict()
 
@@ -162,4 +212,4 @@ bth.start()
 
 rs = RouteState()
 
-vehi = Control('/dev/ttyUSB0')
+vehicle = Control()
