@@ -5,7 +5,6 @@ from django_socketio import broadcast_channel
 from controlVehicle import *
 from navigation import _gps;
 from navigation import _thrd
-from navigation import vehicle
 from navigation.models import Route, Coord;
 
 @events.on_message(channel="hand_control")
