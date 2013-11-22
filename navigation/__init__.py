@@ -7,6 +7,7 @@ from django_socketio import broadcast_channel
 from django_socketio import NoSocket
 from coord import *
 from navigation.models import Route, Coord
+from controlVehicle import *
 
 class StartGps(object):
     def __init__(self):
@@ -87,7 +88,7 @@ class RouteThread(threading.Thread):
             coords = Route.get_only_coord(rout)
             for point in coords:
                 try:
-                    vehicle.speed(96)#velocidad minima
+                    vehicle.speed(94)#velocidad minima
                 except:
                     pass
                 reached = False;
@@ -101,6 +102,7 @@ class RouteThread(threading.Thread):
                         angle_diff = get_angle_diff(gpsData['track'], H)
                         turn_angle = angle_to_turn_angle(angle_diff) #lo devuelve como int
                         try:
+                            print "VOY A GIRAR"
                             vehicle.turn(turn_angle)
                         except:
                             pass

@@ -109,6 +109,7 @@ class Control(object):
 
 
     def turn(self, grados):
+            print "FUNCION DE GIRAR"
             self.arduino_conect.write(chr(255)) 
             self.arduino_conect.write(chr(1))
             self.arduino_conect.write(chr(grados))
