@@ -45,7 +45,7 @@ def navigation(request, socket, context, message):
             rout = Route.objects.get(id=message['route_id'])
             rout.delete();
             route = {'action':'deleted_route', 'id': message['route_id']}
-            socket.send(route)
+            broadcast_channel(route, 'navigation')
 
         elif message['action'] == 'init':
             routes = Route.objects.all();
