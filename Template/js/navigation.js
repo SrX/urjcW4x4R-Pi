@@ -196,7 +196,25 @@ $(document).ready(function() {
 				$("#startroute").addClass('pure-button pure-button-disabled');
 				if ($("#stoproute").is(":hidden")) {
 					$("#stoproute").slideDown("fast");
-				}	
+				}
+				console.log("LA DIBUJOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
+				var serie = {
+					label : 'Ruta',
+					data : rxdata.routecoords,
+
+					color : 7,
+
+					lines : {
+						show : false
+					},
+					points : {
+						show : true
+					},
+					clickable : true
+				};
+				loadRouteToMap(serie)
+			break;
+
 			}	
 			break;
 		case 'nexpPointInfo':
