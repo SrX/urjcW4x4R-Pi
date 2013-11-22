@@ -101,6 +101,7 @@ class RouteThread(threading.Thread):
                         angle_diff = get_angle_diff(gpsData['track'], H)
                         turn_angle = angle_to_turn_angle(angle_diff) #lo devuelve como int
                         try:
+                            print "VOY A GIRAR"
                             vehicle.turn(turn_angle)
                         except:
                             pass
@@ -177,6 +178,7 @@ class Control(object):
         print 'Vehicle: s-' + str(speed) + ' a-' + str(angle)
 
         if self.arduino_conect != '':
+            print "ESTOY CONECTADO"
             self.speed(speed)
             self.turn(angle)
         
@@ -187,6 +189,7 @@ class Control(object):
 
 
     def turn(self, grados):
+            print "FUNCION DE GIRO"
             self.arduino_conect.write(chr(255)) 
             self.arduino_conect.write(chr(1))
             self.arduino_conect.write(chr(grados))
