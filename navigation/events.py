@@ -26,6 +26,7 @@ def navigation(request, socket, context, message):
                     _thrd['RouteThread'].setDaemon(True)
                     _thrd['RouteThread'].start()
                     rs.started = 1
+                    rs.id = message['rid']
                     broadcast_channel({'action':'routeIsStarted'}, 'navigation')
                 
         elif message['action'] == 'stopRoute':
@@ -55,7 +56,11 @@ def navigation(request, socket, context, message):
                 routeinfo.append(route.name)
                 routeinfo.append(route.id)
                 routeslist.append(routeinfo)
-            route2 = {'action':'init', 'info': routeslist, 'routestate': rs.started}
+            coords=[]
+            if rs.started==1:
+                rout = Route.objects.get(id=rs.id);
+                coords = Route.get_only_coord(rout);    
+            route2 = {'action':'init', 'info': routeslist, 'routestate': rs.started, 'routecoords': coords}
             socket.send(route2)
 
     except:

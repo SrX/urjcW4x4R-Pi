@@ -196,7 +196,7 @@ $(document).ready(function() {
 				$("#startroute").addClass('pure-button pure-button-disabled');
 				if ($("#stoproute").is(":hidden")) {
 					$("#stoproute").slideDown("fast");
-				}		
+				}	
 			}	
 			break;
 		case 'nexpPointInfo':

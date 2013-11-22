@@ -115,6 +115,7 @@ class RouteThread(threading.Thread):
 class RouteState(object):
     def __init__ (self):
         self.started = 0
+        self.id = -1
 
 _thrd = dict()
 
