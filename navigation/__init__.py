@@ -103,11 +103,12 @@ class RouteThread(threading.Thread):
                         if dist < 300 and dist != -1:
                             reached = True
                             print '================ FIESTA =================== PUNTO ALCANZADO'
-            print "Ruta terminada"
-            _thrd['RouteThread'].stop()
-            del _thrd['RouteThread']
-            rs.started=0
-            broadcast_channel({'action':'routeIsStopped'}, 'navigation')
+            if not self.stopped():#porque ya lo hago en events
+                print "Ruta terminada"
+                _thrd['RouteThread'].stop()
+                del _thrd['RouteThread']
+                rs.started=0
+                broadcast_channel({'action':'routeIsStopped'}, 'navigation')
       
         except:
             raise

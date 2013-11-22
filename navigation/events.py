@@ -36,11 +36,12 @@ def navigation(request, socket, context, message):
                 broadcast_channel({'action':'routeIsStopped'}, 'navigation')
                 
         elif message['action'] == 'get_route':
-            # print "get_route"
-            rout = Route.objects.get(id=message['route_id']);
-            coords = Route.get_only_coord(rout);
-            route = {'action':'loadRoute', 'route': coords}
-            socket.send(route)
+            if rs.started == 0:
+                # print "get_route"
+                rout = Route.objects.get(id=message['route_id']);
+                coords = Route.get_only_coord(rout);
+                route = {'action':'loadRoute', 'route': coords}
+                socket.send(route)
 
         elif message['action'] == 'delete_route':
             rout = Route.objects.get(id=message['route_id'])
