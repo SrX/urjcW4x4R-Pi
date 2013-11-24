@@ -15,7 +15,7 @@ python manage.py shell
 ---Pluguins
 https://github.com/django-debug-toolbar/django-debug-toolbar
 
-
+https://github.com/yohanboniface/django-leaflet-storage
 
 
 --Mapa
