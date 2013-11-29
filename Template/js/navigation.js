@@ -7,20 +7,13 @@ $(document).ready(
 
      // var data = [ [ [ "/static/mapa.png", 40.2, -3.82, 40.3, -3.81 ] ] ];
      
-     var data = [ 
-                 { data: [[ "/static/mapa.png", 40.2828, -3.8208, 40.28, -3.819 ]],
-                   images: {show: true}, bars: {show: false}, points: {show: false}, lines: {show: false}}
-                ];
+     var data = [];
 
       var options = {
           
             series : { lines : { show : true }, points : { show : true },
-            images : { show : true } },
+            images : { show : false } },
            
-        xaxis : {
-          tickDecimals : 0,
-          tickSize : 1
-        },
         zoom : {
           interactive : true
         },
@@ -32,10 +25,7 @@ $(document).ready(
       
 
       function updateMap() {
-        $.plot.image.loadDataImages(data, options, function() {
-          
-          $.plot("#navi_map", data, options);
-        });
+        $.plot("#navi_map", data, options);
         console.log(data)
       }
       ;
