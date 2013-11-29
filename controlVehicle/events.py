@@ -2,9 +2,13 @@ import time
 import threading
 from django_socketio import events
 from django_socketio import broadcast_channel
-from controlVehicle import *
-from navigation import _gps;
-from navigation import _thrd
+from var import _thrd
+from var import _gps
+from var import bth
+from var import rs
+from var import vehicle
+from var import rec
+from var import *
 from navigation.models import Route, Coord;
 
 @events.on_message(channel="hand_control")
