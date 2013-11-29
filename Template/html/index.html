@@ -1,11 +1,126 @@
 {% extends "base.html" %}
 
-
-
-
-{% block extra_js %}
-	{% load socketio_tags %}
-	{% socketio %}
+ {% block extra_css %}
+<link rel="stylesheet"
+	href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
+<!--[if lte IE 8]>
+     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.ie.css" />
+ <![endif]-->
 
 {% endblock %}
 
+ {% block extra_js %}
+  {% load socketio_tags %} 
+  {% socketio %}
+<script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
+{% endblock %} 
+
+
+
+{% block main %}
+
+<div id="map" style="width: 1200px; height: 580px"></div>
+
+<script>
+  var map = L.map('map').setView([ 40.283251667, -3.819655 ], 13);
+
+  L
+      .tileLayer(
+          'http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png',
+          {
+            maxZoom : 18,
+            attribution : 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
+          }).addTo(map);
+
+  L.marker([ 40.283251667, -3.819655 ]).addTo(map).bindPopup(
+      "<b>Hello world!</b><br />I am a popup.").openPopup();
+/*
+  L.circle([ 40.283251667, -3.819655 ], 20, {
+    color : 'red',
+    fillColor : '#f03',
+    fillOpacity : 0.3
+  }).addTo(map).bindPopup("I am a circle.");
+
+  L.polygon(
+      [ [ 40.28325, -3.819 ], [ 40.283251667, -3.81655 ], [ 40.28, -3.8196 ] ])
+      .addTo(map).bindPopup("I am a polygon.");
+*/
+  var popup = L.popup();
+
+  function onMapClick(e) {
+    popup.setLatLng(e.latlng).setContent(
+        "You clicked the map at " + e.latlng.toString()).openOn(map);
+  }
+
+  map.on('click', onMapClick);
+  
+  //___________________________
+  
+  
+  
+
+  var lastP = new L.LatLng(40.283251667, -3.819655);
+  
+  var messaged = function(rxdata) {
+        //console.log("messaged_data_navigation");
+        //console.log(rxdata.action);
+        switch (rxdata.action) {
+        
+        case 'gpsInfo':
+          var userPoly = [];
+          //console.log(rxdata);
+          if (rxdata.gpsData != '') {
+  
+ 
+              p = new L.LatLng(rxdata.gpsData.lat, rxdata.gpsData.lon);
+              userPoly.push([lastP, p]);
+              
+              lastP = p;	
+              
+              var userPolyline = new L.MultiPolyline(userPoly, {
+                color : 'red',
+                id : 'poly2',
+                weight : 3,
+                opacity : 0.8
+
+              });
+              map.addLayer(userPolyline);
+       
+          }
+          break;
+          default:
+            console.log('xxx')
+        }
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  var connected = function() {
+    console.log("connected");
+    socket.subscribe('navigation');
+
+  };
+
+  var disconnected = function() {
+    console.log("disconnected");
+    setTimeout(start, 1000);
+  };
+
+  var start = function() {
+    socket = new io.Socket();
+    socket.connect();
+    socket.on('connect', connected);
+    socket.on('disconnect', disconnected);
+    socket.on('message', messaged);
+  };
+
+  start();
+  
+</script>
+
+{% endblock %}
