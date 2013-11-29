@@ -3,13 +3,13 @@ import threading
 import sys
 from django_socketio import events
 from django_socketio import broadcast_channel
-from var import _thrd
-from var import _gps
-from var import bth
-from var import rs
-from var import vehicle
-from var import rec
-from var import *
+from variables import _thrd
+from variables import _gps
+from variables import bth
+from variables import rs
+from variables import vehicle
+from variables import rec
+from variables import *
 from navigation.models import Route, Coord;
 
 def do_route(rid):
