@@ -221,7 +221,7 @@ class RouteThread(threading.Thread):
             coords = Route.get_only_coord(rout)
             for point in coords:
                 try:
-                    vehicle.speed(94)#velocidad minima
+                    vehicle.speed(95)#velocidad minima
                 except:
                     pass
                 reached = False;
