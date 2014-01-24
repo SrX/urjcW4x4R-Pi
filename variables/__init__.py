@@ -56,6 +56,7 @@ class Control(object):
         
         # Paso del incremento
         self.inc = 1;
+        self.incex = 5;
         
         try:
             self.arduino_conect = serial.Serial('/dev/ttyUSB0', 9600, timeout=1)
@@ -78,9 +79,9 @@ class Control(object):
         elif action == 's':
             self.ws_value -= self.inc
         elif action == 'd':
-            self.ad_value += self.inc
+            self.ad_value += self.incex
         elif action == 'a':
-            self.ad_value -= self.inc
+            self.ad_value -= self.incex
         else:  # action == 'q':
             # por medidas de seguridad, si el coche se escapa 
             # y/o el piloto se pone nervioso
