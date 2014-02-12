@@ -5,6 +5,8 @@ import time
 import threading
 from navigation.models import Route, Coord
 
+fgps = 1
+
 def is_integer(s):
     try:
         int(s)
@@ -36,7 +38,7 @@ class RecordThread(threading.Thread):
             print "Guardando en base de datos nueva ruta.."
             while not self.stopped():
                 i+=1
-                time.sleep(1)
+                time.sleep(fgps)
                 cp = bth.gpsInfo
                 if (i % int(self.interoute)) == 0 and float(cp['lon']) != 0.0:
                     print "Punto guardado: " + str(cp['lat']) + " " + str(cp['lon'])
@@ -185,8 +187,9 @@ class BrodcastThread(threading.Thread):
 
     def run(self):
         while True:
-            time.sleep(1);
+            time.sleep(fgps);
             self.gpsInfo = _gps.update()
+            print "GOT IT"
             try:
                 broadcast_channel({'action':'gpsInfo', 'gpsData': self.gpsInfo}, 'navigation')
             except NoSocket:
@@ -233,7 +236,7 @@ class RouteThread(threading.Thread):
                 infopoint={'action':'next_point', 'lat': point[0], 'lon': point[1]}
                 broadcast_channel(infopoint, 'navigation')
                 while not reached and not self.stopped():
-                    time.sleep(1);
+                    time.sleep(fgps);
                     gpsData = bth.gpsInfo
                     if str(gpsData['track']) != "nan":
                         dist = distance_to(point, gpsData)
