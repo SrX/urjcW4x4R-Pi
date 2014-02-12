@@ -36,9 +36,10 @@ class RecordThread(threading.Thread):
             print "Guardando en base de datos nueva ruta.."
             while not self.stopped():
                 i+=1
-                cp = _gps.update();
+                time.sleep(1)
+                cp = bth.gpsInfo
                 if (i % int(self.interoute)) == 0 and float(cp['lon']) != 0.0:
-                    print "Punto guardado"
+                    print "Punto guardado: " + str(cp['lat']) + " " + str(cp['lon'])
                     cor = Coord.objects.create(route=rout, lat=float(cp['lat']), lon=float(cp['lon']), track=float(cp['track']), speed=float(cp['speed']), time=cp['time']);
         except:
             raise
@@ -109,7 +110,6 @@ class Control(object):
 
 
     def turn(self, grados):
-            print "FUNCION DE GIRAR"
             self.arduino_conect.write(chr(255)) 
             self.arduino_conect.write(chr(1))
             self.arduino_conect.write(chr(grados))
@@ -144,7 +144,6 @@ class StartGps(object):
     def __init__(self):
         self.gpsData = {}
         try:
-            print "HOLA"
             self._gps = gps.gps(mode=gps.WATCH_ENABLE | gps.WATCH_JSON | gps.WATCH_NEWSTYLE)
         except:  # except (StopIteration):
             print "Unexpected error:", sys.exc_info()[0]
@@ -155,11 +154,12 @@ class StartGps(object):
     def update(self):
         try:
             self._gps.next()
-            print "SIGUIENTE PUNT OGPS"
+            print "SIGUIENTE PUNTO GPS"
         except StopIteration:
             print "Unexpected error: StartGps: ", sys.exc_info()[0]
             raise    
         except AttributeError:  # Hay que decidir que hacer si se produce un error.
+            print "Attribute error: StartGps: ", sys.exc_info()[0]
             return      {'lat' :   0,
                         'lon'   :   0,
                         'track' :   0,
@@ -179,14 +179,18 @@ class StartGps(object):
                 }
 
 class BrodcastThread(threading.Thread):
+    def __init__(self):
+        super(BrodcastThread, self).__init__()
+        self.gpsInfo = {}
+
     def run(self):
-        time.sleep(5);
         while True:
-            time.sleep(0.2);
-            gpsInfo = _gps.update()
+            time.sleep(1);
+            self.gpsInfo = _gps.update()
             try:
-                broadcast_channel({'action':'gpsInfo', 'gpsData': gpsInfo}, 'navigation')
+                broadcast_channel({'action':'gpsInfo', 'gpsData': self.gpsInfo}, 'navigation')
             except NoSocket:
+                print "WOW"
                 time.sleep(5);
             
 # thread.start_new_thread(print_time, ("Thread-1", 2, socket))
@@ -221,21 +225,22 @@ class RouteThread(threading.Thread):
             coords = Route.get_only_coord(rout)
             for point in coords:
                 try:
-                    vehicle.speed(95)#velocidad minima
+                    vehicle.speed(94)#velocidad minima
+                    time.sleep(8)#tiempo que va a estar yendo en linea recta para inicializar
                 except:
                     pass
                 reached = False;
                 infopoint={'action':'next_point', 'lat': point[0], 'lon': point[1]}
                 broadcast_channel(infopoint, 'navigation')
                 while not reached and not self.stopped():
-                    gpsData = _gps.update()
+                    time.sleep(1);
+                    gpsData = bth.gpsInfo
                     if str(gpsData['track']) != "nan":
                         dist = distance_to(point, gpsData)
                         H=heading_to(point, gpsData)
                         angle_diff = get_angle_diff(gpsData['track'], H)
                         turn_angle = angle_to_turn_angle(angle_diff) #lo devuelve como int
                         try:
-                            print "VOY A GIRAR"
                             vehicle.turn(turn_angle)
                         except:
                             pass
