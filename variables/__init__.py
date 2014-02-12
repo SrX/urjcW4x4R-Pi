@@ -187,7 +187,7 @@ class BrodcastThread(threading.Thread):
 
     def run(self):
         while True:
-            time.sleep(fgps);
+            #time.sleep(fgps);
             self.gpsInfo = _gps.update()
             print "GOT IT"
             try:
