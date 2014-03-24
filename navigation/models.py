@@ -12,7 +12,7 @@ class Route(models.Model):
         for o in obj:
             #print "--A"
             #print o.lat +' '+ o.lon
-            coords.append([o.lat, o.lon])
+            coords.append([o.lon, o.lat])
         return  coords
 
 

@@ -133,7 +133,7 @@ $(document).ready(
             
             var serie = {
               label : 'GPS',
-              data : [ [ rxdata.gpsData.lat, rxdata.gpsData.lon ] ],
+              data : [ [ rxdata.gpsData.lon, rxdata.gpsData.lat ] ],
               lines : {
                 show : true
               },

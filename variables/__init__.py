@@ -5,7 +5,7 @@ import time
 import threading
 from navigation.models import Route, Coord
 
-fgps = 1
+fgps = 0.2
 
 def is_integer(s):
     try:
