@@ -51,11 +51,11 @@ def angle_to_turn_angle(angle):
     # valores negativos hacia la izquierda, valores < 90
     # valores positivos hacia la derecha, valores > 90
     if angle > 90:
-        turn_angle = 120;
+        turn_angle = 105;
     elif angle < -90:
-        turn_angle = 60;
+        turn_angle = 75;
     else:
-        turn_angle = angle / 3 + 90
+        turn_angle = angle / 6 + 90
     return int(turn_angle)
         
         
