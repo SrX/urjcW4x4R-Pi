@@ -3,9 +3,10 @@ from math import *
 import sys
 # http://www.todopic.com.ar/foros/index.php?PHPSESSID=nvmismbs6oqmqvaf47euhib115&topic=26373.msg216172#msg216172
 def distance_to(point, to_point):
+    """Atencion a latitud/longitud de los puntos"""
     try:
-        lat1 = radians(float(point[0]))
-        lon1 = radians(float(point[1]))
+        lat1 = radians(float(point[1]))
+        lon1 = radians(float(point[0]))
         
         lat2 = radians(float(to_point['lat']))
         lon2 = radians(float(to_point['lon']))
@@ -20,9 +21,10 @@ def distance_to(point, to_point):
     
     
 def heading_to(point, to_point):
+    """Atencion a latitud/longitud de los puntos"""
     try:
-        lat1 = radians(float(point[0]))
-        lon1 = radians(float(point[1]))
+        lat1 = radians(float(point[1]))
+        lon1 = radians(float(point[0]))
         
         lat2 = radians(float(to_point['lat']))
         lon2 = radians(float(to_point['lon']))

@@ -34,15 +34,20 @@ class RecordThread(threading.Thread):
     def run(self):
         i=0;
         try:
-            rout = Route.objects.create(name=self.nameroute)
             print "Guardando en base de datos nueva ruta.."
+            route=[]
             while not self.stopped():
                 i+=1
                 time.sleep(fgps)
                 cp = bth.gpsInfo
                 if (i % int(self.interoute)) == 0 and float(cp['lon']) != 0.0:
+                    route_point=[]
+                    route_point=[float(cp['lat']), float(cp['lon']), float(cp['track']), float(cp['speed']), cp['time']]
+                    route.append(route_point)
                     print "Punto guardado: " + str(cp['lat']) + " " + str(cp['lon'])
-                    cor = Coord.objects.create(route=rout, lat=float(cp['lat']), lon=float(cp['lon']), track=float(cp['track']), speed=float(cp['speed']), time=cp['time']);
+            rout = Route.objects.create(name=self.nameroute)
+            for point in route:
+                cor = Coord.objects.create(route=rout, lat=point[0], lon=point[1], track=point[2], speed=point[3], time=point[4]);
         except:
             raise
 
@@ -156,7 +161,6 @@ class StartGps(object):
     def update(self):
         try:
             self._gps.next()
-            print "SIGUIENTE PUNTO GPS"
         except StopIteration:
             print "Unexpected error: StartGps: ", sys.exc_info()[0]
             raise    
@@ -189,11 +193,11 @@ class BrodcastThread(threading.Thread):
         while True:
             time.sleep(fgps);
             self.gpsInfo = _gps.update()
-            print "GOT IT"
+            print "Info GPS"
             try:
                 broadcast_channel({'action':'gpsInfo', 'gpsData': self.gpsInfo}, 'navigation')
             except NoSocket:
-                print "WOW"
+                print "No socket GPS"
                 time.sleep(5);
             
 # thread.start_new_thread(print_time, ("Thread-1", 2, socket))
@@ -224,18 +228,22 @@ class RouteThread(threading.Thread):
         except:
             raise
         try:
+            j=0
             rout = Route.objects.get(id=route_id)
             coords = Route.get_only_coord(rout)
             for point in coords:
+                if self.stopped():
+                    break
                 try:
                     vehicle.speed(94)#velocidad minima
                     time.sleep(8)#tiempo que va a estar yendo en linea recta para inicializar
                 except:
                     pass
                 reached = False;
-                infopoint={'action':'next_point', 'lat': point[0], 'lon': point[1]}
+                infopoint={'action':'next_point', 'lon': point[0], 'lat': point[1]}
                 broadcast_channel(infopoint, 'navigation')
                 while not reached and not self.stopped():
+                    j+=1
                     time.sleep(fgps);
                     gpsData = bth.gpsInfo
                     if str(gpsData['track']) != "nan":
@@ -248,20 +256,23 @@ class RouteThread(threading.Thread):
                         except:
                             pass
                         infopoint={'action':'state_route', 'lat': gpsData['lat'], 'lon': gpsData['lon'], 'dist': dist}
-                        broadcast_channel(infopoint, 'navigation')
+                        if (j % 10) == 0:
+                            print "ENVIO: ::::::::::::::::" + str(j)
+                            broadcast_channel(infopoint, 'navigation')
                         print 'gpsData: ' + str(gpsData['lat']) + ' ' + str(gpsData['lon']) + ' Next point: ' + str(point) + ' Distance: ' +str(dist) + ' Turn angle: ' + str(turn_angle)
                         # socket.send({"action": "dox_route", "gpsData": gpsData,"nextPoin": point, 'distance_to': dist})
                         if dist < 300 and dist != -1:
                             reached = True
                             print '================ FIESTA =================== PUNTO ALCANZADO'
-            if not self.stopped():#porque ya lo hago en events
-                print "Ruta terminada"
-                _thrd['RouteThread'].stop()
-                del _thrd['RouteThread']
-                rs.started=0
-                vehicle.speed(90)
-                vehicle.turn(90)
-                broadcast_channel({'action':'routeIsStopped'}, 'navigation')
+            #if not self.stopped():#porque ya lo hago en events
+            #tanto si acaba como si se para
+            print "Ruta terminada"
+            #_thrd['RouteThread'].stop()
+            del _thrd['RouteThread']
+            rs.started=0
+            broadcast_channel({'action':'routeIsStopped'}, 'navigation')
+            vehicle.speed(90)
+            vehicle.turn(90)
       
         except:
             raise

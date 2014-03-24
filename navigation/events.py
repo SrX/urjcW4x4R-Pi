@@ -34,8 +34,8 @@ def navigation(request, socket, context, message):
                 
         elif message['action'] == 'stopRoute':
                 _thrd['RouteThread'].stop()
-                del _thrd['RouteThread']
-                rs.started=0
+                #del _thrd['RouteThread']
+                #rs.started=0
                 broadcast_channel({'action':'routeIsStopped'}, 'navigation')
                 
         elif message['action'] == 'get_route':
