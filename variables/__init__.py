@@ -6,6 +6,7 @@ import threading
 from navigation.models import Route, Coord
 
 fgps = 0.2
+intervalo_envio = 5 # Para sacar cada cuanto se envia la info: fgps * intervalo
 
 def is_integer(s):
     try:
@@ -190,12 +191,15 @@ class BrodcastThread(threading.Thread):
         self.gpsInfo = {}
 
     def run(self):
+        jj=0
         while True:
+            jj+=1
             time.sleep(fgps);
             self.gpsInfo = _gps.update()
             print "Info GPS"
             try:
-                broadcast_channel({'action':'gpsInfo', 'gpsData': self.gpsInfo}, 'navigation')
+                if (jj % intervalo_envio) == 0:
+                    broadcast_channel({'action':'gpsInfo', 'gpsData': self.gpsInfo}, 'navigation')
             except NoSocket:
                 print "No socket GPS"
                 time.sleep(5);
@@ -256,7 +260,7 @@ class RouteThread(threading.Thread):
                         except:
                             pass
                         infopoint={'action':'state_route', 'lat': gpsData['lat'], 'lon': gpsData['lon'], 'dist': dist}
-                        if (j % 10) == 0:
+                        if (j % intervalo_envio) == 0:
                             broadcast_channel(infopoint, 'navigation')
                         print 'gpsData: ' + str(gpsData['lat']) + ' ' + str(gpsData['lon']) + ' Next point: ' + str(point) + ' Distance: ' +str(dist) + ' Turn angle: ' + str(turn_angle)
                         # socket.send({"action": "dox_route", "gpsData": gpsData,"nextPoin": point, 'distance_to': dist})
