@@ -154,7 +154,11 @@ $(document).ready(
             var nameroute = createnode('div', '', 'ruta', value[1] + ' '
                 + value[0])
             var deleteroute = createnode('div', '', 'delete', 'Borrar')
+            var confirm = createnode('div', '', 'confirm', 'Yes')
+            var cancel = createnode('div', '', 'cancel', 'No')
             node.appendChild(nameroute)
+            deleteroute.appendChild(confirm)
+            deleteroute.appendChild(cancel)
             node.appendChild(deleteroute)
             $("#listarutas").append(node)
           });
@@ -169,7 +173,11 @@ $(document).ready(
             });
           });
           $(".delete").click(function() {
-            var currentid = $(this).parent().attr("id")
+            $(".confirm").show();
+            $(".cancel").show();
+          });
+          $(".confirm").click(function() {
+            var currentid = $(this).parent().parent().attr("id")
             if (currentid == routeID) {
               routeID = -1; // para no pasarle un ID en caso de startroute
               // si era el mismo
@@ -187,8 +195,14 @@ $(document).ready(
             socket.send({
               action : 'delete_route',
               'route_id' : currentid
-            });
+            });            
           });
+          $(".cancel").click(function() {
+            $(".confirm").hide("fast");
+            $(this).hide("fast");
+          });    
+            $(".confirm").hide("fast");
+            $(".cancel").hide("fast");      
           if (rxdata.routestate == 1) {
             $("#startroute").removeClass('pure-button pure-button-success');
             $("#startroute").addClass('pure-button pure-button-disabled');

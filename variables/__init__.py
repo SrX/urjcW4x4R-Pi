@@ -257,17 +257,13 @@ class RouteThread(threading.Thread):
                             pass
                         infopoint={'action':'state_route', 'lat': gpsData['lat'], 'lon': gpsData['lon'], 'dist': dist}
                         if (j % 10) == 0:
-                            print "ENVIO: ::::::::::::::::" + str(j)
                             broadcast_channel(infopoint, 'navigation')
                         print 'gpsData: ' + str(gpsData['lat']) + ' ' + str(gpsData['lon']) + ' Next point: ' + str(point) + ' Distance: ' +str(dist) + ' Turn angle: ' + str(turn_angle)
                         # socket.send({"action": "dox_route", "gpsData": gpsData,"nextPoin": point, 'distance_to': dist})
                         if dist < 300 and dist != -1:
                             reached = True
                             print '================ FIESTA =================== PUNTO ALCANZADO'
-            #if not self.stopped():#porque ya lo hago en events
-            #tanto si acaba como si se para
             print "Ruta terminada"
-            #_thrd['RouteThread'].stop()
             del _thrd['RouteThread']
             rs.started=0
             broadcast_channel({'action':'routeIsStopped'}, 'navigation')
