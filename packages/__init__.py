@@ -5,7 +5,7 @@ import threading
 import logging #no se si hace falta
 import car_control as CC
 import gps_c
-from navigation.coord import *
+import coord
 from navigation.models import Route, Coord
 from django_socketio import broadcast_channel
 from django_socketio import NoSocket
@@ -123,10 +123,10 @@ class RouteThread(threading.Thread):
                     time.sleep(fgps);
                     gpsData = bth.gpsInfo
                     if str(gpsData['track']) != "nan":
-                        dist = distance_to(point, gpsData)
-                        H=heading_to(point, gpsData)
-                        angle_diff = get_angle_diff(gpsData['track'], H)
-                        turn_angle = angle_to_turn_angle(angle_diff) #lo devuelve como int
+                        dist = coord.distance_to(point, gpsData)
+                        H=coord.heading_to(point, gpsData)
+                        angle_diff = coord.get_angle_diff(gpsData['track'], H)
+                        turn_angle = coord.angle_to_turn_angle(angle_diff) #lo devuelve como int
                         try:
                             vehicle.turn(turn_angle)
                         except:
