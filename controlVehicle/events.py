@@ -5,9 +5,7 @@ from django_socketio import broadcast_channel
 from variables import _thrd
 from variables import _gps
 from variables import bth
-from variables import rs
 from variables import vehicle
-from variables import rec
 from variables import *
 from navigation.models import Route, Coord;
 
@@ -21,16 +19,18 @@ def message(request, socket, context, message):
                     _thrd['RecordThread'] = RecordThread(message['name'], message['interv'])
                     _thrd['RecordThread'].setDaemon(True)
                     _thrd['RecordThread'].start()
-                    rec.recording=1
                     socket.send_and_broadcast_channel({'action':'startedroute'}) #tabular
         elif message['action'] == 'stoproute':
             _thrd['RecordThread'].stop()
             del _thrd['RecordThread']
             print "Nueva ruta guardada en base de datos"
-            rec.recording=0
             socket.send_and_broadcast_channel({'action':'stoppedroute'})
         elif message['action'] == 'init':
-            ret = {'action':'init', 'ws': vehicle.ws_value, 'ad': vehicle.ad_value, 'recording': rec.recording};
+            if not _thrd.has_key('RecordThread'):
+                recording = 0
+            else:
+                recording = 1
+            ret = {'action':'init', 'ws': vehicle.ws_value, 'ad': vehicle.ad_value, 'recording': recording};
             socket.send_and_broadcast_channel(ret)
         else:
             ws_value, ad_value = vehicle.action(message['action'])

@@ -201,15 +201,16 @@ $(document).ready(
             $(".confirm").hide("fast");
             $(this).hide("fast");
           });    
-            $(".confirm").hide("fast");
-            $(".cancel").hide("fast");      
+          $(".confirm").hide("fast");
+          $(".cancel").hide("fast");      
+          console.log("HASTA AQUI BIEEEEN")
           if (rxdata.routestate == 1) {
+            console.log("LA DIBUJOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
             $("#startroute").removeClass('pure-button pure-button-success');
             $("#startroute").addClass('pure-button pure-button-disabled');
             if ($("#stoproute").is(":hidden")) {
               $("#stoproute").slideDown("fast");
             }
-            console.log("LA DIBUJOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
             var serie = {
               label : 'Ruta',
               data : rxdata.routecoords,
@@ -227,6 +228,22 @@ $(document).ready(
         case 'nexpPointInfo':
           break;
         case 'routeIsStarted':
+          console.log("VENGA HOMBRE");
+          var serie = {
+            label : 'Ruta',
+            data : rxdata.route,
+
+            color : 7,
+
+            lines : {
+              show : false
+            },
+            points : {
+              show : true
+            },
+            clickable : true
+          };
+          loadRouteToMap(serie)
           if ($("#stoproute").is(":hidden")) {
             $("#stoproute").slideDown("fast");
           }
