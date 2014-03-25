@@ -173,8 +173,8 @@ $(document).ready(
             });
           });
           $(".delete").click(function() {
-            $(".confirm").show();
-            $(".cancel").show();
+            $(this).children(".confirm").show();
+            $(this).children(".cancel").show();
           });
           $(".confirm").click(function() {
             var currentid = $(this).parent().parent().attr("id")
@@ -198,7 +198,7 @@ $(document).ready(
             });            
           });
           $(".cancel").click(function() {
-            $(".confirm").hide("fast");
+            $(this).parent().children(".confirm").hide("fast");
             $(this).hide("fast");
           });    
           $(".confirm").hide("fast");
