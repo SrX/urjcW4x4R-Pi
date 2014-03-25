@@ -203,9 +203,7 @@ $(document).ready(
           });    
           $(".confirm").hide("fast");
           $(".cancel").hide("fast");      
-          console.log("HASTA AQUI BIEEEEN")
           if (rxdata.routestate == 1) {
-            console.log("LA DIBUJOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
             $("#startroute").removeClass('pure-button pure-button-success');
             $("#startroute").addClass('pure-button pure-button-disabled');
             if ($("#stoproute").is(":hidden")) {
@@ -228,7 +226,6 @@ $(document).ready(
         case 'nexpPointInfo':
           break;
         case 'routeIsStarted':
-          console.log("VENGA HOMBRE");
           var serie = {
             label : 'Ruta',
             data : rxdata.route,
@@ -265,7 +262,7 @@ $(document).ready(
           $("#npDistance").html(rxdata.dist);
           break;
         default:
-          console.log("Recibido algo fuera de lo comun");
+          break;
         }
       };
 

@@ -45,7 +45,7 @@ $(document).ready(function() {
                 action: move
             });
         };
-        setTimeout(SendInputKey, 70);
+        setTimeout(SendInputKey, 150);
     };
 
 
@@ -105,6 +105,9 @@ $(document).ready(function() {
                 $("#startroute").addClass('pure-button pure-button-success');
                 $("#stoproute").hide("fast");
                 break
+            default:
+                break
+        }
         }
     };
 

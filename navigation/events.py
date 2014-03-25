@@ -3,11 +3,11 @@ import threading
 import sys
 from django_socketio import events
 from django_socketio import broadcast_channel
-from variables import _thrd
-from variables import _gps
-from variables import bth
-from variables import vehicle
-from variables import *
+from packages import _thrd
+from packages import _gps
+from packages import bth
+from packages import vehicle
+from packages import *
 from navigation.models import Route, Coord
     
 @events.on_message(channel="navigation")
@@ -16,11 +16,9 @@ def navigation(request, socket, context, message):
         if message['action'] == 'startRoute':
             if not _thrd.has_key('RouteThread'):
                 if message['rid'] != -1:
-                    print "message:" + message['rid']
                     _thrd['RouteThread'] = RouteThread(message['rid'])
                     _thrd['RouteThread'].setDaemon(True)
                     _thrd['RouteThread'].start()
-                    print "guardado en dic: " + _thrd['RouteThread'].route_id
                     rout = Route.objects.get(id=message['rid']);
                     coords = Route.get_only_coord(rout);
                     broadcast_channel({'action':'routeIsStarted', 'route': coords}, 'navigation')
@@ -57,10 +55,8 @@ def navigation(request, socket, context, message):
                 rout = Route.objects.get(id=_thrd['RouteThread'].route_id);
                 coords = Route.get_only_coord(rout);
                 started = 1
-                print "ESTO HA IDO"
             except:
                 started = 0
-            print "ESTA STARTED?????  " + str(started)
             route2 = {'action':'init', 'info': routeslist, 'routestate': started, 'routecoords': coords}
             socket.send(route2)
     except:

@@ -1,6 +1,6 @@
-
 from math import *
 import sys
+
 # http://www.todopic.com.ar/foros/index.php?PHPSESSID=nvmismbs6oqmqvaf47euhib115&topic=26373.msg216172#msg216172
 def distance_to(point, to_point):
     """Atencion a latitud/longitud de los puntos"""
@@ -59,10 +59,3 @@ def angle_to_turn_angle(angle):
     else:
         turn_angle = angle / 6 + 90
     return int(turn_angle)
-        
-        
-        
-        
-        
-        
-    # return degrees(acos(cos(radians(heading_to)-radians(track))))

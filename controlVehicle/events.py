@@ -2,16 +2,15 @@ import time
 import threading
 from django_socketio import events
 from django_socketio import broadcast_channel
-from variables import _thrd
-from variables import _gps
-from variables import bth
-from variables import vehicle
-from variables import *
+from packages import _thrd
+from packages import _gps
+from packages import bth
+from packages import vehicle
+from packages import *
 from navigation.models import Route, Coord;
 
 @events.on_message(channel="hand_control")
 def message(request, socket, context, message):
-    print "manual_control"
     try:
         if message['action'] == 'startroute':
             if is_integer(message['interv']) and not name_used(message['name']):
