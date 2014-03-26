@@ -108,7 +108,6 @@ $(document).ready(function() {
             default:
                 break
         }
-        }
     };
 
     $("#stoproute").hide();
