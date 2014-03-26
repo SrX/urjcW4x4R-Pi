@@ -12,6 +12,7 @@ from django_socketio import NoSocket
 
 fgps = 0.2
 intervalo_envio = 5 # Para sacar cada cuanto se envia la info: fgps * intervalo
+                    # Afecta al envio de info de GPS y de distancia en algoritmo navegacion
 
 def is_integer(s):
     try:
@@ -56,7 +57,7 @@ class RecordThread(threading.Thread):
             print "Guardando en base de datos.."
             for point in route:
                 i+=1
-                print i
+                print str(i) + " " + str(point[0]) + " " + str(point[1])
                 cor = Coord.objects.create(route=rout, lat=point[0], lon=point[1], track=point[2], speed=point[3], time=point[4]);
             print "Finalizado grabado en base de datos"
         except:
@@ -85,7 +86,6 @@ class BroadcastThread(threading.Thread):
                     print "Info GPS para navigation"
             except NoSocket:
                 print "No socket navigation GPS"
-                time.sleep(5);
 
 class RouteThread(threading.Thread):
 

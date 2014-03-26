@@ -130,7 +130,8 @@ $(document).ready(
         case 'gpsInfo':
           console.log(rxdata.gpsData);
           if (rxdata.gpsData != '') {
-            
+            $("#gpsLat").html(rxdata.gpsData.lat);
+            $("#gpsLon").html(rxdata.gpsData.lon);            
             var serie = {
               label : 'GPS',
               data : [ [ rxdata.gpsData.lon, rxdata.gpsData.lat ] ],
@@ -251,15 +252,16 @@ $(document).ready(
           $("#startroute").removeClass('pure-button pure-button-disabled');
           $("#startroute").addClass('pure-button pure-button-success');
           $("#stoproute").hide("fast")
+          $("#npDistance").html("-");
+          $("#npLat").html("-");
+          $("#npLon").html("-");
           break;
         case 'next_point':
           $("#npLat").html(rxdata.lat);
           $("#npLon").html(rxdata.lon);
           break;
         case 'state_route':
-          $("#gpsLat").html(rxdata.lat);
-          $("#gpsLon").html(rxdata.lon);
-          $("#npDistance").html(rxdata.dist);
+          $("#npDistance").html(rxdata.dist.toFixed(3)/100 + " m");
           break;
         default:
           break;
