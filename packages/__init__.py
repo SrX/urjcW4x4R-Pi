@@ -54,11 +54,13 @@ class RecordThread(threading.Thread):
                     print "Punto guardado en RAM: " + str(cp['lat']) + " " + str(cp['lon'])
             rout = Route.objects.create(name=self.nameroute)
             i=0;
+            broadcast_channel({'action':'saving', 'done': 0}, 'hand_control')
             print "Guardando en base de datos.."
             for point in route:
                 i+=1
                 print str(i) + " " + str(point[0]) + " " + str(point[1])
                 cor = Coord.objects.create(route=rout, lat=point[0], lon=point[1], track=point[2], speed=point[3], time=point[4]);
+            broadcast_channel({'action':'saving', 'done': 1}, 'hand_control')
             print "Finalizado grabado en base de datos"
         except:
             raise

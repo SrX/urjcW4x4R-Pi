@@ -105,6 +105,14 @@ $(document).ready(function() {
                 $("#startroute").addClass('pure-button pure-button-success');
                 $("#stoproute").hide("fast");
                 break
+            case 'saving':
+                console.log("HEREEE");
+                if (data.done==0){
+                    $("#saving").html("Saving in BD");
+                }else{
+                    $("#saving").html("");
+                }
+                break
             default:
                 break
         }
