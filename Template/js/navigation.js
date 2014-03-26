@@ -261,7 +261,8 @@ $(document).ready(
           $("#npLon").html(rxdata.lon);
           break;
         case 'state_route':
-          $("#npDistance").html(rxdata.dist.toFixed(3)/100 + " m");
+          var numero = rxdata.dist/100;
+          $("#npDistance").html(numero.toFixed(3) + " m");
           break;
         default:
           break;
