@@ -47,7 +47,7 @@ class RecordThread(threading.Thread):
                 i+=1
                 time.sleep(fgps)
                 cp = bth.gpsInfo
-                if (i % int(self.interoute)) == 0 and float(cp['lon']) != 0.0:
+                if (i % int(int(self.interoute)/fgps)) == 0 and float(cp['lon']) != 0.0:
                     route_point=[]
                     route_point=[float(cp['lat']), float(cp['lon']), float(cp['track']), float(cp['speed']), cp['time']]
                     route.append(route_point)
